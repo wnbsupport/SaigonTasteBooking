@@ -1,0 +1,48 @@
+/* Saigon Taste Booking – booking form. Scoped to .stb so it does not clash with the website's theme.
+   Fonts come from the website; colours can be changed with --stb-accent (plugin setting or shortcode accent="#hex"). */
+.stb { --stb-accent: #24305a; --stb-on-accent: #ffffff; --stb-ink: #1c1d22; --stb-muted: #5d6170; --stb-line: #d5d8e0; --stb-field: #ffffff; --stb-soft: #f3f4f7; --stb-bad: #b3261e;
+  color: var(--stb-ink); font: inherit; line-height: 1.5; max-width: 760px; margin: 0 auto; text-align: left; }
+.stb *, .stb *::before, .stb *::after { box-sizing: border-box; }
+.stb-box { background: var(--stb-field); border: 1px solid var(--stb-line); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.stb-title { margin: 0; font-size: 1.4em; line-height: 1.2; color: var(--stb-ink); }
+.stb p { margin: 0; }
+.stb-muted { color: var(--stb-muted); font-size: .92em; }
+.stb-small { font-size: .85em; margin-top: -6px !important; }
+.stb-center { text-align: center; }
+.stb-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 520px) { .stb-row { grid-template-columns: 1fr; } .stb-box { padding: 16px; } }
+.stb-field { display: flex; flex-direction: column; gap: 5px; font-size: .85em; font-weight: 600; color: var(--stb-muted); min-width: 0; margin: 0; }
+.stb input:not([type=checkbox]), .stb select, .stb textarea {
+  font: inherit; font-size: 16px; font-weight: 400; color: var(--stb-ink); background: var(--stb-field); border: 1px solid var(--stb-line); border-radius: 8px;
+  padding: 10px 12px; width: 100%; max-width: 100%; min-height: 44px; margin: 0; box-shadow: none; appearance: auto; }
+.stb textarea { resize: vertical; min-height: 80px; }
+.stb input:focus, .stb select:focus, .stb textarea:focus, .stb button:focus-visible { outline: 2px solid var(--stb-accent); outline-offset: 1px; }
+.stb [aria-invalid="true"] { border-color: var(--stb-bad) !important; }
+.stb-times { display: flex; flex-direction: column; gap: 12px; }
+.stb-meal { margin: 0 0 6px !important; font-size: .75em; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--stb-muted); }
+.stb-slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; }
+.stb-slot { font: inherit; font-size: .92em; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--stb-ink); background: var(--stb-field);
+  border: 1px solid var(--stb-line); border-radius: 8px; padding: 9px 4px; min-height: 42px; cursor: pointer; margin: 0; line-height: 1.2; text-transform: none; letter-spacing: 0; }
+.stb-slot:hover:not(:disabled) { border-color: var(--stb-accent); background: var(--stb-field); color: var(--stb-ink); }
+.stb-slot[aria-pressed="true"], .stb-slot[aria-pressed="true"]:hover { background: var(--stb-accent); border-color: var(--stb-accent); color: var(--stb-on-accent); }
+.stb-slot:disabled { text-decoration: line-through; opacity: .45; cursor: not-allowed; }
+.stb-empty { border: 1px dashed var(--stb-line); border-radius: 10px; padding: 14px; color: var(--stb-muted); }
+.stb-err { color: var(--stb-bad); font-size: .95em; font-weight: 600; }
+.stb-alert { color: var(--stb-bad); background: #fdecea; border-radius: 8px; padding: 10px 12px; font-weight: 600; }
+.stb-consent { display: flex; gap: 10px; align-items: flex-start; font-size: .85em; color: var(--stb-muted); font-weight: 400; margin: 0; cursor: pointer; }
+.stb-consent input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--stb-accent); }
+.stb-consent a { color: var(--stb-accent); }
+.stb-btn { font: inherit; font-weight: 700; font-size: 1em; color: var(--stb-on-accent); background: var(--stb-accent); border: 0; border-radius: 10px; padding: 14px 18px; min-height: 48px; cursor: pointer; width: 100%; margin: 0; text-transform: none; letter-spacing: 0; }
+.stb-btn:hover { filter: brightness(1.08); background: var(--stb-accent); color: var(--stb-on-accent); }
+.stb-btn:disabled { opacity: .6; cursor: progress; }
+.stb-hp { position: absolute !important; left: -10000px !important; width: 1px; height: 1px; overflow: hidden; }
+.stb-ref { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 1.6em; font-weight: 700; color: var(--stb-accent); letter-spacing: .04em; }
+.stb-done { outline: none; }
+.stb-done .stb-btn { width: auto; align-self: flex-start; }
+.stb-hours { border-top: 1px solid var(--stb-line); padding-top: 10px; font-size: .9em; }
+.stb-hours summary { cursor: pointer; font-weight: 600; color: var(--stb-muted); }
+.stb-hours table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.stb-hours td, .stb-hours th { padding: 5px 0; border-bottom: 1px solid var(--stb-line); vertical-align: top; text-align: left; font-weight: 400; }
+.stb-hours th { font-weight: 700; padding-top: 12px; }
+.stb-hours td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: no-preference) { .stb-slot, .stb-btn { transition: background-color .12s, border-color .12s; } }

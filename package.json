@@ -1,0 +1,37 @@
+{
+  "name": "saigontaste-booking",
+  "version": "1.0.0",
+  "description": "Saigon Taste Booking – quản lý đặt bàn trung tâm cho các nhà hàng",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --v8-pool-size=2 index.js",
+    "build": "echo Build OK",
+    "dev": "NODE_ENV=development node index.js",
+    "test": "npm ls better-sqlite3 >/dev/null 2>&1 || npm i --no-save better-sqlite3@11; node --test --test-concurrency=1 test/*.test.js",
+    "plugin:zip": "node scripts/plugin-zip.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wnbsupport/saigontastebooking.git"
+  },
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/wnbsupport/saigontastebooking/issues"
+  },
+  "homepage": "https://github.com/wnbsupport/saigontastebooking#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "knex": "^3.3.0",
+    "luxon": "^3.7.2",
+    "mysql2": "^3.24.6",
+    "nodemailer": "^10.2.1"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  }
+}

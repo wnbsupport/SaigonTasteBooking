@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Book a table – {{name}}</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/widget/booking-widget.css?v={{v}}">
+<link rel="stylesheet" href="/book.css?v={{v}}">
+</head>
+<body>
+<header class="bk-hero" data-color="{{color}}">
+  <div class="bk-wrap"><p class="bk-tag">Book a table</p><h1>{{name}}</h1></div>
+</header>
+<main class="bk-wrap bk-main">
+  <div class="stb" data-endpoint="/api/public/v1/r/{{slug}}" data-accent="{{color}}"></div>
+</main>
+<footer class="bk-wrap bk-foot">Bookings by Saigon Taste</footer>
+<script src="/widget/booking-widget.js?v={{v}}"></script>
+<script src="/book.js?v={{v}}"></script>
+</body>
+</html>

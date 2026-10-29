@@ -1,0 +1,1 @@
+(function () { var h = document.querySelector('.bk-hero'); var c = h && h.getAttribute('data-color'); if (c && /^#[0-9a-f]{6}$/i.test(c)) document.documentElement.style.setProperty('--hero', c); })();
