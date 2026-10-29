@@ -42,7 +42,8 @@ Hệ thống đặt bàn trung tâm cho các nhà hàng Saigon Taste (hiện có
 
 - Đăng nhập bằng email + mật khẩu (tối thiểu 10 ký tự, bcrypt). Quên mật khẩu qua link email (hiệu lực 1 giờ); mời nhân viên bằng link (7 ngày).
 - Sai mật khẩu 5 lần liên tiếp: khóa 15 phút và chủ nhận email cảnh báo.
-- Tự đăng xuất khi không dùng (mặc định 30 phút, chủ chỉnh được). Việc app tự cập nhật danh sách không tính là "đang dùng".
+- Không tự đăng xuất khi đang dùng. Ô **Ghi nhớ đăng nhập** (mặc định có tick): giữ đăng nhập tới khi thiết bị 90 ngày liền không mở app; bỏ tick thì đóng trình duyệt/app là phải đăng nhập lại.
+- **Đăng xuất khỏi mọi thiết bị**: mỗi người tự làm trong menu ☰; chủ làm cho bất kỳ người dùng nào trong Tài khoản (khi nhân viên nghỉ việc hoặc mất máy).
 - Nhân viên chỉ thấy quán được giao; chỉ Chủ vào được Cài đặt quán, Tài khoản, Nhật ký.
 - Nhật ký ghi mọi thao tác (booking, cài đặt, đăng nhập), chỉ đọc.
 - Khóa kết nối website chỉ lưu dạng hash; plugin WordPress gọi app từ phía server nên khóa không lộ ra trình duyệt.

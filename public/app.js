@@ -14,7 +14,8 @@ const DICT = {
   vi: {
     signIn: 'Đăng nhập', email: 'Email', password: 'Mật khẩu', forgot: 'Quên mật khẩu?', wrong: 'Email hoặc mật khẩu không đúng.', left: 'Còn {n} lần thử trước khi tài khoản bị khóa.',
     locked: 'Tài khoản đang tạm khóa vì nhập sai nhiều lần. Thử lại sau {n} phút.', justLocked: 'Sai mật khẩu {n} lần. Tài khoản bị khóa {m} phút và chủ đã nhận email cảnh báo.',
-    idleOut: 'Bạn đã được đăng xuất vì không dùng app {n} phút.', sessionOut: 'Phiên đăng nhập đã hết. Vui lòng đăng nhập lại.',
+    sessionOut: 'Phiên đăng nhập đã hết. Vui lòng đăng nhập lại.', remember: 'Ghi nhớ đăng nhập trên thiết bị này', rememberHint: 'Bỏ tick khi dùng máy lạ hoặc máy dùng chung.',
+    logoutAll: 'Đăng xuất khỏi mọi thiết bị', logoutAllQ: 'Đăng xuất khỏi mọi thiết bị?', logoutAllMe: 'Tất cả iPad, điện thoại, máy tính đang đăng nhập bằng tài khoản của bạn sẽ phải đăng nhập lại, kể cả thiết bị này.', logoutAllUser: '{n} sẽ phải đăng nhập lại trên mọi thiết bị.', loggedOutAll: 'Đã đăng xuất khỏi mọi thiết bị', devices: 'Đang đăng nhập trên {n} thiết bị', noDevices: 'Không đăng nhập trên thiết bị nào',
     forgotTitle: 'Quên mật khẩu', forgotHelp: 'Nhập email đăng nhập. Nếu email có tài khoản, hệ thống gửi link đặt mật khẩu mới (hiệu lực 1 giờ).', sendLink: 'Gửi link', back: 'Quay lại', linkSent: 'Nếu email có tài khoản, link đã được gửi. Kiểm tra hộp thư (cả mục Spam).',
     setPw: 'Đặt mật khẩu', setPwFor: 'Đặt mật khẩu cho {email}', newPw: 'Mật khẩu mới (ít nhất 10 ký tự)', newPw2: 'Nhập lại mật khẩu', pwShort: 'Mật khẩu cần ít nhất 10 ký tự.', pwMismatch: 'Hai mật khẩu không giống nhau.', tokenBad: 'Link này đã hết hạn hoặc đã được dùng. Bấm "Quên mật khẩu?" để nhận link mới.', saveAndSignIn: 'Lưu và đăng nhập', welcome: 'Chào {name}',
     signOut: 'Đăng xuất', owner: 'Chủ', staff: 'Nhân viên', allRest: 'Tất cả quán', sound: 'Âm thanh', soundOn: 'Đã bật chuông báo booking mới', soundOff: 'Đã tắt chuông',
@@ -57,14 +58,14 @@ const DICT = {
     personName: 'Họ tên', users: 'Người dùng', addStaff: 'Thêm người dùng', role: 'Vai trò', access: 'Quán được xem', lang: 'Ngôn ngữ', invite: 'Gửi lời mời', inviteNote: 'Người dùng nhận email mời kèm link tự đặt mật khẩu (hiệu lực 7 ngày). Nhân viên chỉ xem và xử lý booking của quán được giao.', invited: 'Đã gửi lời mời. Nếu email chưa tới, gửi link dưới đây cho người đó:',
     edit: 'Sửa', active: 'Đang hoạt động', inactive: 'Đã khóa', lockedNow: 'Đang bị khóa đăng nhập', unlock: 'Mở khóa', sendPwLink: 'Gửi link đặt mật khẩu', linkReady: 'Link đã gửi qua email. Có thể gửi trực tiếp link này:', noPw: 'chưa đặt mật khẩu', lastLogin: 'Đăng nhập gần nhất', never: 'chưa đăng nhập',
     e_self: 'Không thể tự khóa hoặc tự hạ quyền tài khoản của mình.', e_lastOwner: 'Phải còn ít nhất một tài khoản Chủ đang hoạt động.', e_exists: 'Email này đã có tài khoản.', e_restaurantIds: 'Chọn ít nhất một quán.',
-    security: 'Bảo mật', idle: 'Tự đăng xuất khi không dùng', secNote: 'Nhập sai mật khẩu 5 lần liên tiếp: tài khoản khóa 15 phút và chủ nhận email cảnh báo. Mọi thao tác đều ghi vào Nhật ký.',
+    security: 'Bảo mật', secNote: 'Không tự đăng xuất khi đang dùng. Thiết bị có tick “Ghi nhớ đăng nhập” giữ đăng nhập tới khi 90 ngày liền không mở app. Nhập sai mật khẩu 5 lần liên tiếp: tài khoản khóa 15 phút và chủ nhận email cảnh báo. Mọi thao tác đều ghi vào Nhật ký.',
     myPw: 'Đổi mật khẩu của tôi', curPw: 'Mật khẩu hiện tại', pwChanged: 'Đã đổi mật khẩu', curWrong: 'Mật khẩu hiện tại không đúng.',
     system: 'Hệ thống', sysDb: 'Database', sysMail: 'Hộp mail hệ thống', sysEnc: 'ENCRYPTION_KEY', sysFailed: 'Email lỗi (7 ngày)', sysVer: 'Phiên bản', yes: 'Có', notSet: 'Chưa cài', okWord: 'Hoạt động',
     adminPwWarn: 'ADMIN_PASSWORD vẫn còn trong biến môi trường. Hãy xóa nó trong SiteGround (Devs → Node.js) rồi deploy lại.',
     cleanup: 'Tự xóa bản deploy cũ trên SiteGround (giữ số inode thấp)', cleanupLast: 'Lần kiểm tra gần nhất: {t} · thư mục đang chạy {r} · đã xóa {n}', cleanupSkip: 'Lần kiểm tra gần nhất: {t} · bỏ qua ({s})', cleanupNone: 'Chưa kiểm tra lần nào (chạy vài phút sau khi app khởi động).',
     // log
     lf_all: 'Tất cả', lf_bookings: 'Booking & cài đặt', lf_security: 'Đăng nhập & bảo mật', when: 'Thời gian', who: 'Người làm', what: 'Hành động', detail: 'Chi tiết', more: 'Xem thêm', logRo: 'Nhật ký chỉ đọc, không ai sửa hay xóa được, kể cả chủ.', noLog: 'Chưa có hoạt động.',
-    a_login: 'Đăng nhập', a_login_failed: 'Đăng nhập sai', a_login_locked: 'Khóa đăng nhập', a_logout: 'Đăng xuất', a_auto_logout: 'Tự đăng xuất (không dùng)', a_password_reset_request: 'Yêu cầu đặt lại mật khẩu', a_password_set: 'Đặt mật khẩu', a_password_changed: 'Đổi mật khẩu', a_lang_changed: 'Đổi ngôn ngữ',
+    a_login: 'Đăng nhập', a_login_failed: 'Đăng nhập sai', a_login_locked: 'Khóa đăng nhập', a_logout: 'Đăng xuất', a_logout_all: 'Đăng xuất mọi thiết bị', a_user_logout_all: 'Đăng xuất mọi thiết bị của người dùng', a_auto_logout: 'Tự đăng xuất (không dùng)', a_password_reset_request: 'Yêu cầu đặt lại mật khẩu', a_password_set: 'Đặt mật khẩu', a_password_changed: 'Đổi mật khẩu', a_lang_changed: 'Đổi ngôn ngữ',
     a_booking_created_web: 'Booking mới từ website', a_booking_created_staff: 'Nhân viên thêm booking', a_booking_confirm: 'Xác nhận booking', a_booking_decline: 'Từ chối booking', a_booking_cancel: 'Hủy booking', a_booking_seated: 'Đánh dấu đã đến', a_booking_noshow: 'Đánh dấu không đến', a_booking_undo: 'Hoàn tác', a_booking_expired: 'Booking hết hạn',
     a_booking_deleted: 'Xóa đơn', a_csv_export: 'Xuất CSV', a_print: 'In danh sách khách', a_restaurant_created: 'Thêm quán', a_restaurant_updated: 'Sửa cài đặt quán', a_key_rotated: 'Tạo khóa kết nối mới', a_mail_test: 'Gửi thử email', a_user_invited: 'Mời người dùng', a_user_updated: 'Sửa người dùng', a_user_link: 'Gửi link mật khẩu', a_user_unlocked: 'Mở khóa đăng nhập', a_settings_updated: 'Sửa cài đặt bảo mật', a_deploy_cleanup: 'Dọn bản deploy cũ',
     weekdays: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'], wd: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
@@ -72,7 +73,8 @@ const DICT = {
   en: {
     signIn: 'Sign in', email: 'Email', password: 'Password', forgot: 'Forgot password?', wrong: 'Wrong email or password.', left: '{n} attempts left before the account locks.',
     locked: 'This account is locked after too many wrong passwords. Try again in {n} min.', justLocked: '{n} wrong passwords. The account is locked for {m} minutes and the owner has been emailed.',
-    idleOut: 'You were signed out after {n} minutes without activity.', sessionOut: 'Your session has ended. Please sign in again.',
+    sessionOut: 'Your session has ended. Please sign in again.', remember: 'Keep me signed in on this device', rememberHint: 'Untick on a shared or unfamiliar device.',
+    logoutAll: 'Sign out of all devices', logoutAllQ: 'Sign out of all devices?', logoutAllMe: 'Every iPad, phone and computer signed in with your account will need to sign in again, including this one.', logoutAllUser: '{n} will need to sign in again on every device.', loggedOutAll: 'Signed out of all devices', devices: 'Signed in on {n} device(s)', noDevices: 'Not signed in on any device',
     forgotTitle: 'Forgot password', forgotHelp: 'Enter your sign-in email. If it has an account, you get a link to set a new password (valid for 1 hour).', sendLink: 'Send link', back: 'Back', linkSent: 'If that email has an account, the link is on its way. Check your inbox (and spam).',
     setPw: 'Set password', setPwFor: 'Set a password for {email}', newPw: 'New password (at least 10 characters)', newPw2: 'Repeat password', pwShort: 'Use at least 10 characters.', pwMismatch: 'The two passwords are different.', tokenBad: 'This link has expired or was already used. Use "Forgot password?" to get a new one.', saveAndSignIn: 'Save and sign in', welcome: 'Hi {name}',
     signOut: 'Sign out', owner: 'Owner', staff: 'Staff', allRest: 'All restaurants', sound: 'Sound', soundOn: 'New-booking chime on', soundOff: 'Chime off',
@@ -113,13 +115,13 @@ const DICT = {
     personName: 'Full name', users: 'Users', addStaff: 'Add a user', role: 'Role', access: 'Restaurant access', lang: 'Language', invite: 'Send invite', inviteNote: 'The person gets an invite email with a link to set their password (valid 7 days). Staff only see bookings for their restaurants.', invited: 'Invite sent. If the email does not arrive, send them this link:',
     edit: 'Edit', active: 'Active', inactive: 'Disabled', lockedNow: 'Sign-in locked', unlock: 'Unlock', sendPwLink: 'Send password link', linkReady: 'Link emailed. You can also send this link directly:', noPw: 'no password yet', lastLogin: 'Last sign-in', never: 'never',
     e_self: 'You cannot disable or demote your own account.', e_lastOwner: 'At least one active Owner account must remain.', e_exists: 'That email already has an account.', e_restaurantIds: 'Choose at least one restaurant.',
-    security: 'Security', idle: 'Sign out automatically after', secNote: '5 wrong passwords in a row lock the account for 15 minutes and email the owner. Every action is recorded in the Activity log.',
+    security: 'Security', secNote: 'No automatic sign-out while in use. Devices with “Keep me signed in” stay signed in until the app is unused for 90 days. 5 wrong passwords in a row lock the account for 15 minutes and email the owner. Every action is recorded in the Activity log.',
     myPw: 'Change my password', curPw: 'Current password', pwChanged: 'Password changed', curWrong: 'The current password is wrong.',
     system: 'System', sysDb: 'Database', sysMail: 'System mailbox', sysEnc: 'ENCRYPTION_KEY', sysFailed: 'Failed emails (7 days)', sysVer: 'Version', yes: 'Yes', notSet: 'Not set', okWord: 'Working',
     adminPwWarn: 'ADMIN_PASSWORD is still in the environment variables. Remove it in SiteGround (Devs → Node.js) and redeploy.',
     cleanup: 'Remove old SiteGround deploys automatically (keeps inode use low)', cleanupLast: 'Last check: {t} · running folder {r} · removed {n}', cleanupSkip: 'Last check: {t} · skipped ({s})', cleanupNone: 'Not checked yet (runs a few minutes after the app starts).',
     lf_all: 'All', lf_bookings: 'Bookings & settings', lf_security: 'Sign-in & security', when: 'Time', who: 'Who', what: 'Action', detail: 'Details', more: 'Load more', logRo: 'The log is read-only. Nobody can edit or delete entries, including the owner.', noLog: 'No activity yet.',
-    a_login: 'Signed in', a_login_failed: 'Failed sign-in', a_login_locked: 'Sign-in locked', a_logout: 'Signed out', a_auto_logout: 'Auto sign-out (idle)', a_password_reset_request: 'Password reset requested', a_password_set: 'Password set', a_password_changed: 'Password changed', a_lang_changed: 'Language changed',
+    a_login: 'Signed in', a_login_failed: 'Failed sign-in', a_login_locked: 'Sign-in locked', a_logout: 'Signed out', a_logout_all: 'Signed out of all devices', a_user_logout_all: 'Signed a user out of all devices', a_auto_logout: 'Auto sign-out (idle)', a_password_reset_request: 'Password reset requested', a_password_set: 'Password set', a_password_changed: 'Password changed', a_lang_changed: 'Language changed',
     a_booking_created_web: 'New website booking', a_booking_created_staff: 'Booking added by staff', a_booking_confirm: 'Booking confirmed', a_booking_decline: 'Booking declined', a_booking_cancel: 'Booking cancelled', a_booking_seated: 'Marked arrived', a_booking_noshow: 'Marked no-show', a_booking_undo: 'Undo', a_booking_expired: 'Booking expired',
     a_booking_deleted: 'Booking deleted', a_csv_export: 'CSV exported', a_print: 'Guest list printed', a_restaurant_created: 'Restaurant added', a_restaurant_updated: 'Restaurant settings changed', a_key_rotated: 'Connection key replaced', a_mail_test: 'Test email', a_user_invited: 'User invited', a_user_updated: 'User changed', a_user_link: 'Password link sent', a_user_unlocked: 'Sign-in unlocked', a_settings_updated: 'Security settings changed', a_deploy_cleanup: 'Old deploys removed',
     weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], wd: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
@@ -225,12 +227,12 @@ async function boot() {
   if (path === '/password') return passwordPage();
   try {
     const me = await api('GET', '/api/auth/me', undefined, { allow401: true });
-    if (me.error) return loginView(me.reason === 'idle' ? t('idleOut', { n: ls.get('idle', 30) }) : '');
+    if (me.error) return loginView(me.reason === 'expired' ? t('sessionOut') : '');
     signedIn(me);
   } catch (e) { if (!e.network) loginView(); else $('#root').innerHTML = `<div class="wrap"><p class="boot">${esc(t('netErr'))}</p><p class="boot"><button class="btn" id="retry">↻</button></p></div>`, $('#retry').onclick = boot; }
 }
 function signedIn(me) {
-  S.me = me; S.restaurants = me.restaurants; setLang(me.user.lang); ls.set('idle', me.idleMinutes); S.lastActive = Date.now();
+  S.me = me; S.restaurants = me.restaurants; setLang(me.user.lang);
   if (location.pathname === '/print') return printPage();
   if (!S.date) S.date = todayIn(S.restaurants[0] ? S.restaurants[0].timezone : 'Australia/Melbourne');
   if (!isOwner() && S.tab !== 'list') S.tab = 'list';
@@ -241,7 +243,7 @@ function sessionEnded(reason) {
   stopPolling();
   S.me = null; closeSheet();
   if (location.pathname === '/password') return;
-  loginView(reason === 'idle' ? t('idleOut', { n: ls.get('idle', 30) }) : t('sessionOut'));
+  loginView(t('sessionOut'));
 }
 
 /* ============ sign-in, forgot, set password ============ */
@@ -249,24 +251,29 @@ function langSeg(id) { return `<div class="seg" id="${id}" role="group" aria-lab
 function loginView(msg = '') {
   history.replaceState(null, '', '/');
   $('#root').innerHTML = `<div class="wrap"><div class="login"><div class="panel stack">
+    <div class="login-brand"><img src="/brand/logo.png" alt="Saigon Taste" width="150" height="227"></div>
     <div class="row" style="justify-content:space-between"><div><h1 style="font-size:21px">${t('signIn')}</h1><p class="muted">Saigon Taste Booking</p></div>${langSeg('ll')}</div>
     ${msg ? `<p class="note warn">${esc(msg)}</p>` : ''}
     <form id="lf" class="stack" style="gap:12px" novalidate>
-      <label class="f" for="l-email">${t('email')}<input id="l-email" type="email" autocomplete="username" required></label>
+      <label class="f" for="l-email">${t('email')}<input id="l-email" type="email" autocomplete="username" value="${esc(ls.get('remember', true) ? ls.get('email', '') : '')}" required></label>
       <label class="f" for="l-pass">${t('password')}<input id="l-pass" type="password" autocomplete="current-password" required></label>
+      <label class="check" for="l-rem"><input id="l-rem" type="checkbox" ${ls.get('remember', true) ? 'checked' : ''}> ${t('remember')}</label>
+      <p class="muted small" style="margin-top:-6px">${t('rememberHint')}</p>
       <p class="err" id="l-err" role="alert"></p>
       <button class="btn pri" type="submit">${t('signIn')}</button>
       <button class="linkbtn" type="button" id="forgot">${t('forgot')}</button>
     </form></div></div></div>`;
   $$('#ll [data-l]').forEach(b => b.onclick = () => { setLang(b.dataset.l); loginView(msg); });
   $('#forgot').onclick = () => forgotView();
-  $('#l-email').focus();
+  ($('#l-email').value ? $('#l-pass') : $('#l-email')).focus();
   $('#lf').onsubmit = async e => {
     e.preventDefault();
     const btn = $('#lf button[type=submit]'); btn.disabled = true; $('#l-err').textContent = '';
     try {
-      const me = await api('POST', '/api/auth/login', { email: $('#l-email').value, password: $('#l-pass').value }, { allow401: true, quiet: true });
+      const remember = $('#l-rem').checked;
+      const me = await api('POST', '/api/auth/login', { email: $('#l-email').value, password: $('#l-pass').value, remember }, { allow401: true, quiet: true });
       if (me.error) { $('#l-err').textContent = t('wrong') + (me.left ? ' ' + t('left', { n: me.left }) : ''); return; }
+      ls.set('remember', remember); ls.set('email', remember ? me.user.email : '');
       signedIn(me);
     } catch (err) {
       const d = err.data || {};
@@ -319,39 +326,42 @@ function render() {
   if (!tabs.some(x => x[0] === S.tab)) S.tab = 'list';
   const whoLine = `${esc(u.name)} · ${isOwner() ? t('owner') : t('staff') + ' – ' + S.restaurants.map(r => esc(r.name)).join(', ')}`;
   $('#root').innerHTML = `<header class="top"><div class="wrap">
-      <div class="brand"><i>ST</i>Saigon Taste</div>
+      <div class="brand"><img src="/brand/mark.png" alt="" width="22" height="30">Saigon Taste</div>
       <div class="who"><span>${whoLine}</span>
         ${langSeg('lang')}
-        <label class="check small" for="snd"><input type="checkbox" id="snd" ${S.sound ? 'checked' : ''}> 🔔 ${t('sound')}</label>
-        <button class="btn sm" id="logout">${t('signOut')}</button></div>
+        <label class="check small" for="snd"><input type="checkbox" id="snd" ${S.sound ? 'checked' : ''}> 🔔 ${t('sound')}</label></div>
       <button class="btn sm menu-btn" id="menu" aria-label="${t('menu')}">${S.sound ? '🔔' : ''}${icon('menu')}</button>
     </div><div class="wrap"><nav class="tabs${tabs.length < 2 ? ' one' : ''}">${tabs.map(([k, l]) => `<button data-tab="${k}" aria-current="${S.tab === k}">${icon(k)}<span class="tl">${l}</span>${k === 'list' && S.summary.pending ? `<span class="badge">${S.summary.pending}</span>` : ''}</button>`).join('')}</nav></div></header>
     <main class="wrap app${tabs.length < 2 ? ' nonav' : ''}" id="main"><div id="offline"></div><div id="pane"></div></main>`;
   $('#menu').onclick = () => sheet(`<h2>${t('menu')}</h2><p>${whoLine}</p>${langSeg('mlang')}
       <label class="check" for="msnd"><input type="checkbox" id="msnd" ${S.sound ? 'checked' : ''}> 🔔 ${t('sound')}</label>
-      <div class="row end"><button class="btn" data-close>${t('close')}</button><button class="btn dang" id="mlogout">${t('signOut')}</button></div>`, () => {
+      <button class="btn dang" id="mlogoutall" style="align-self:flex-start">${t('logoutAll')}</button>
+      <div class="row end"><button class="btn" data-close>${t('close')}</button><button class="btn pri" id="mlogout">${t('signOut')}</button></div>`, () => {
     $$('#mlang [data-l]').forEach(b => b.onclick = async () => { setLang(b.dataset.l); closeSheet(); try { await api('PATCH', '/api/auth/me', { lang: LANG }); } catch { /* keep local */ } render(); });
     $('#msnd').onchange = e => { S.sound = e.target.checked; ls.set('sound', S.sound); if (S.sound) { chime(); toast(t('soundOn')); } else toast(t('soundOff')); closeSheet(); render(); };
-    $('#mlogout').onclick = () => { closeSheet(); $('#logout').click(); };
+    $('#mlogout').onclick = () => { closeSheet(); signOut(); };
+    $('#mlogoutall').onclick = () => sheet(`<h2>${t('logoutAllQ')}</h2><p>${t('logoutAllMe')}</p><div class="row end"><button class="btn" data-close>${t('no')}</button><button class="btn pri danger" id="la-go">${t('logoutAll')}</button></div>`, () => {
+      $('#la-go').onclick = async () => { stopPolling(); try { await api('POST', '/api/auth/logout-all', {}); } catch { /* ignore */ } closeSheet(); S.me = null; loginView(t('loggedOutAll')); };
+    });
   });
   $$('[data-tab]').forEach(b => b.onclick = () => { S.tab = b.dataset.tab; ls.set('tab', S.tab); render(); });
   $$('#lang [data-l]').forEach(b => b.onclick = async () => { setLang(b.dataset.l); try { await api('PATCH', '/api/auth/me', { lang: LANG }); } catch { /* keep local */ } render(); });
   $('#snd').onchange = e => { S.sound = e.target.checked; ls.set('sound', S.sound); if (S.sound) { chime(); toast(t('soundOn')); } else toast(t('soundOff')); };
-  $('#logout').onclick = async () => { stopPolling(); try { await api('POST', '/api/auth/logout', {}); } catch { /* ignore */ } S.me = null; loginView(); };
+
   renderOffline();
   ({ list: listView, rest: restView, users: usersView, log: logView })[S.tab]();
 }
+async function signOut() { stopPolling(); try { await api('POST', '/api/auth/logout', {}); } catch { /* ignore */ } S.me = null; loginView(); }
 function renderOffline() { const el = $('#offline'); if (el) el.innerHTML = online ? '' : `<p class="offline">${t('offline')}</p>`; }
 function refresh() { if (!S.me) return; if (sheetOpen()) { pendingReload = true; return; } if (S.tab === 'list') listView(); }
 
-/* ============ polling, chime, idle ============ */
+/* ============ polling and chime ============ */
 let pollTimer = null, audioCtx = null, lastUnseen = null;
 function startPolling() { stopPolling(); poll(true); pollTimer = setInterval(() => { if (document.visibilityState === 'visible') poll(); }, 15000); }
 function stopPolling() { if (pollTimer) clearInterval(pollTimer); pollTimer = null; lastUnseen = null; }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.me) poll(); });
 async function poll(first) {
   if (!S.me) return;
-  if (Date.now() - S.lastActive > (S.me.idleMinutes || 30) * 60000) { try { const r = await api('GET', '/api/auth/me', undefined, { background: true, allow401: true }); if (r.error) return sessionEnded('idle'); } catch { /* offline */ } }
   let s;
   try { s = await api('GET', '/api/bookings/summary', undefined, { background: true, quiet: true }); } catch { return; }
   const changed = s.version !== S.summary.version;
@@ -371,7 +381,7 @@ function applySummary(s) {
   const tb = $('[data-tab="list"]'); if (tb) tb.innerHTML = `${icon('list')}<span class="tl">${t('tBookings')}</span>${s.pending ? `<span class="badge">${s.pending}</span>` : ''}`;
   const ms = $('#mseg-p'); if (ms) ms.textContent = `${t('mPending')} · ${s.pending}`;
 }
-['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, () => { S.lastActive = Date.now(); unlockAudio(); }, { passive: true }));
+['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, () => { unlockAudio(); }, { passive: true }));
 function unlockAudio() { if (!S.sound) return; try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); } catch { /* no audio */ } }
 function chime() {
   try {
@@ -765,7 +775,7 @@ async function usersView() {
   const dep = sys.deploys;
   const depLine = !dep ? t('cleanupNone') : dep.skipped ? t('cleanupSkip', { t: stamp(dep.at), s: dep.skipped }) : t('cleanupLast', { t: stamp(dep.at), r: dep.running, n: dep.removed.length });
   $('#pane').innerHTML = `<div class="grid-app"><div class="stack">
-    <section class="panel"><h2>${t('users')}</h2><ul class="users">${U.users.map(u => `<li><div style="min-width:0"><b>${esc(u.name)}</b> ${u.active ? '' : `<span class="chip st-cancelled">${t('inactive')}</span>`} ${u.locked ? `<span class="chip st-declined">${t('lockedNow')}</span>` : ''}<br><span class="muted copy">${esc(u.email)}</span><br><span class="muted small">${t('lastLogin')}: ${u.lastLoginAt ? stamp(u.lastLoginAt) : u.hasPassword ? t('never') : t('noPw')}</span></div>
+    <section class="panel"><h2>${t('users')}</h2><ul class="users">${U.users.map(u => `<li><div style="min-width:0"><b>${esc(u.name)}</b> ${u.active ? '' : `<span class="chip st-cancelled">${t('inactive')}</span>`} ${u.locked ? `<span class="chip st-declined">${t('lockedNow')}</span>` : ''}<br><span class="muted copy">${esc(u.email)}</span><br><span class="muted small">${t('lastLogin')}: ${u.lastLoginAt ? stamp(u.lastLoginAt) : u.hasPassword ? t('never') : t('noPw')} · ${u.devices ? t('devices', { n: u.devices }) : t('noDevices')}</span></div>
       <div class="row"><span class="chip ${u.role === 'owner' ? 'st-confirmed' : 'st-cancelled'}">${u.role === 'owner' ? t('owner') : t('staff')}</span><span class="chip st-cancelled">${u.lang.toUpperCase()}</span><span class="muted small">${u.role === 'owner' ? t('allRest') : u.restaurantIds.map(id => esc(rest(id).name)).join(', ')}</span><button class="btn sm" data-edit="${u.id}">${t('edit')}</button></div></li>`).join('')}</ul></section>
     <section class="panel stack" style="gap:10px"><h2 class="h" style="margin:0">${t('addStaff')}</h2>
       <div class="g2"><label class="f" for="u-n">${t('personName')}<input id="u-n" maxlength="120"><span class="err" data-ue="name"></span></label><label class="f" for="u-e">${t('email')}<input id="u-e" type="email"><span class="err" data-ue="email"></span></label></div>
@@ -774,7 +784,6 @@ async function usersView() {
       <p class="note">${t('inviteNote')}</p><button class="btn pri" id="u-go" style="align-self:flex-start">${t('invite')}</button></section>
   </div><div class="stack">
     <section class="panel stack" style="gap:10px"><h2 class="h" style="margin:0">${t('security')}</h2>
-      <label class="f" for="idle">${t('idle')}<select id="idle">${set.idleChoices.map(v => `<option value="${v}" ${set.idleMinutes === v ? 'selected' : ''}>${mins(v)}</option>`).join('')}</select></label>
       <p class="muted small">${t('secNote')}</p></section>
     <section class="panel stack" style="gap:10px"><h2 class="h" style="margin:0">${t('myPw')}</h2>
       <form id="mp" class="stack" style="gap:10px"><input type="email" autocomplete="username" value="${esc(S.me.user.email)}" hidden>
@@ -798,7 +807,6 @@ async function usersView() {
     try { const out = await api('POST', '/api/admin/users', body); linkSheet(t('invited'), out.link); usersView(); }
     catch (err) { if (err.status === 422) Object.entries(err.data.errors || {}).forEach(([k, v]) => { const el = $(`[data-ue="${k}"]`); if (el) el.textContent = errText(k, v); }); }
   };
-  $('#idle').onchange = async e => { try { await api('PUT', '/api/admin/settings', { idleMinutes: +e.target.value }); S.me.idleMinutes = +e.target.value; ls.set('idle', +e.target.value); toast(t('saved')); } catch { /* toast */ } };
   $('#dc').onchange = async e => { try { await api('PUT', '/api/admin/settings', { deployCleanup: e.target.checked }); toast(t('saved')); } catch { /* toast */ } };
   $('#mp').onsubmit = async e => {
     e.preventDefault(); $('#mperr').textContent = '';
@@ -818,10 +826,14 @@ function editUser(u) {
     <fieldset style="border:0;padding:0;margin:0" id="e-rs" ${u.role === 'owner' ? 'hidden' : ''}><legend class="muted small" style="font-weight:600">${t('access')}</legend><div class="row">${S.restaurants.map(r => `<label class="check" for="er-${r.id}"><input type="checkbox" id="er-${r.id}" value="${r.id}" ${u.restaurantIds.includes(r.id) ? 'checked' : ''}> ${esc(r.name)}</label>`).join('')}</div></fieldset>
     <label class="check" for="e-a"><input id="e-a" type="checkbox" ${u.active ? 'checked' : ''}> ${t('active')}</label>
     <p class="err" id="e-err"></p>
-    <div class="row">${u.locked ? `<button class="btn sm" id="e-unlock">${t('unlock')}</button>` : ''}${u.active ? `<button class="btn sm" id="e-link">${t('sendPwLink')}</button>` : ''}</div>
+    <p class="muted small">${u.devices ? t('devices', { n: u.devices }) : t('noDevices')}</p>
+    <div class="row">${u.locked ? `<button class="btn sm" id="e-unlock">${t('unlock')}</button>` : ''}${u.active ? `<button class="btn sm" id="e-link">${t('sendPwLink')}</button>` : ''}${u.devices ? `<button class="btn sm dang" id="e-out">${t('logoutAll')}</button>` : ''}</div>
     <div class="row end"><button class="btn" data-close>${t('no')}</button><button class="btn pri" id="e-go">${t('save')}</button></div>`, () => {
     $('#e-role').onchange = e => { $('#e-rs').hidden = e.target.value === 'owner'; };
     const ul = $('#e-unlock'); if (ul) ul.onclick = async () => { try { await api('POST', `/api/admin/users/${u.id}/unlock`, {}); closeSheet(); toast(t('saved')); usersView(); } catch { /* toast */ } };
+    const eo = $('#e-out'); if (eo) eo.onclick = () => sheet(`<h2>${t('logoutAllQ')}</h2><p>${esc(t('logoutAllUser', { n: u.name }))}</p><div class="row end"><button class="btn" data-close>${t('no')}</button><button class="btn pri danger" id="la-go">${t('logoutAll')}</button></div>`, () => {
+      $('#la-go').onclick = async () => { try { const out = await api('POST', `/api/admin/users/${u.id}/logout-all`, {}); closeSheet(); if (out.self) { stopPolling(); S.me = null; loginView(t('loggedOutAll')); return; } toast(t('loggedOutAll')); usersView(); } catch { /* toast */ } };
+    });
     const lk = $('#e-link'); if (lk) lk.onclick = async () => { try { const out = await api('POST', `/api/admin/users/${u.id}/link`, {}); linkSheet(t('linkReady'), out.link); } catch { /* toast */ } };
     $('#e-go').onclick = async () => {
       const body = { name: $('#e-n').value, role: $('#e-role').value, lang: $('#e-l').value, active: $('#e-a').checked, restaurantIds: $$('#e-rs input:checked').map(x => +x.value) };

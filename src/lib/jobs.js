@@ -44,7 +44,9 @@ async function sendReminders(now = Date.now()) {
 }
 
 async function tidy(now = Date.now()) {
-  await db()('sessions').where('last_seen_at', '<', now - 2 * 864e5).del();
+  const A = require('./auth');
+  await db()('sessions').where('remember', true).where('last_seen_at', '<', now - A.REMEMBER_DAYS * 864e5).del();
+  await db()('sessions').where('remember', false).where('last_seen_at', '<', now - A.SHORT_DAYS * 864e5).del();
   await db()('tokens').where('expires_at', '<', now - 7 * 864e5).del();
 }
 

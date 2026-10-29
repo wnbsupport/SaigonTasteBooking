@@ -209,19 +209,43 @@ test('five wrong passwords lock the account for 15 minutes and email the owner',
   assert.ok(log.includes('login_locked') && log.includes('login_failed') && log.includes('user_unlocked'));
 });
 
-test('idle sessions end; background polling does not keep them alive', async () => {
+test('remember me: no idle sign-out, 90-day rolling session; without it the cookie ends with the browser', async () => {
+  const sidOf = c => require('crypto').createHash('sha256').update(decodeURIComponent(c.cookie.split('=')[1])).digest('hex');
+  // remembered (default)
+  const r1 = await fetch(`${base()}/api/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: 'tom@test.au', password: 'tom-password-1' }) });
+  assert.match(r1.headers.get('set-cookie'), /Max-Age=7776000/);
   const c = H.client();
   await c.login('tom@test.au', 'tom-password-1');
-  const sid = require('crypto').createHash('sha256').update(decodeURIComponent(c.cookie.split('=')[1])).digest('hex');
-  const old = Date.now() - 10 * 60000;
-  await H.db()('sessions').where({ id: sid }).update({ last_seen_at: old });
-  await c.get('/api/bookings/summary', { 'X-Background': '1' });
-  assert.equal(Number((await H.db()('sessions').where({ id: sid }).first()).last_seen_at), old, 'polling did not refresh activity');
-  await owner.put('/api/admin/settings', { idleMinutes: 15 });
-  await H.db()('sessions').where({ id: sid }).update({ last_seen_at: Date.now() - 16 * 60000 });
-  const r = await c.get('/api/bookings/pending');
-  assert.equal(r.status, 401); assert.equal(r.body.reason, 'idle');
-  await owner.put('/api/admin/settings', { idleMinutes: 30 });
+  const sid = sidOf(c);
+  await H.db()('sessions').where({ id: sid }).update({ last_seen_at: Date.now() - 30 * 864e5 });
+  const ok = await c.get('/api/bookings/pending');
+  assert.equal(ok.status, 200, 'a month without use is fine – no idle sign-out');
+  assert.ok(Number((await H.db()('sessions').where({ id: sid }).first()).last_seen_at) > Date.now() - 60000, 'use renews the session');
+  await H.db()('sessions').where({ id: sid }).update({ last_seen_at: Date.now() - 91 * 864e5 });
+  const gone = await c.get('/api/bookings/pending');
+  assert.equal(gone.status, 401); assert.equal(gone.body.reason, 'expired');
+  // not remembered: session cookie (no Max-Age)
+  const r2 = await fetch(`${base()}/api/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: 'tom@test.au', password: 'tom-password-1', remember: false }) });
+  assert.equal(r2.status, 200);
+  assert.doesNotMatch(r2.headers.get('set-cookie'), /Max-Age/);
+  const row = await H.db()('sessions').orderBy('created_at', 'desc').first();
+  assert.equal(!!row.remember, false);
+});
+
+test('sign out of all devices: yourself, or an owner for any user', async () => {
+  const a = H.client(), b = H.client();
+  await a.login('tom@test.au', 'tom-password-1'); await b.login('tom@test.au', 'tom-password-1');
+  const users = (await owner.get('/api/admin/users')).body.users;
+  assert.ok(users.find(u => u.email === 'tom@test.au').devices >= 2);
+  assert.equal((await a.post('/api/auth/logout-all')).status, 200);
+  assert.equal((await b.get('/api/bookings/pending')).status, 401, 'the other device is signed out too');
+  await a.login('tom@test.au', 'tom-password-1');
+  const tom = users.find(u => u.email === 'tom@test.au');
+  const r = await owner.post(`/api/admin/users/${tom.id}/logout-all`);
+  assert.equal(r.status, 200); assert.equal(r.body.users.find(u => u.id === tom.id).devices, 0);
+  assert.equal((await a.get('/api/bookings/pending')).status, 401);
+  const log = (await owner.get('/api/admin/audit?filter=security')).body.entries.map(e => e.action);
+  assert.ok(log.includes('logout_all') && log.includes('user_logout_all'));
 });
 
 test('requests from other sites are refused', async () => {

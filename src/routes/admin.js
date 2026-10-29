@@ -20,10 +20,11 @@ async function userList() {
   const users = await db()('users').orderBy('role', 'asc').orderBy('name');
   const links = await db()('user_restaurants');
   const t = Date.now();
+  const devices = Object.fromEntries((await db()('sessions').select('user_id').count({ n: '*' }).groupBy('user_id')).map(r => [r.user_id, Number(r.n)]));
   return users.map(u => ({
     id: u.id, name: u.name, email: u.email, role: u.role, lang: u.lang, active: !!u.active, hasPassword: !!u.password_hash,
     locked: !!(u.locked_until && Number(u.locked_until) > t), lastLoginAt: u.last_login_at ? Number(u.last_login_at) : null,
-    restaurantIds: links.filter(l => l.user_id === u.id).map(l => l.restaurant_id),
+    restaurantIds: links.filter(l => l.user_id === u.id).map(l => l.restaurant_id), devices: devices[u.id] || 0,
   }));
 }
 
@@ -84,6 +85,15 @@ router.post('/users/:id/link', async (req, res) => {
   res.json({ link });
 });
 
+/** Sign a user out on all their devices. */
+router.post('/users/:id/logout-all', async (req, res) => {
+  const user = await db()('users').where({ id: Number(req.params.id) }).first();
+  if (!user) return res.status(404).json({ error: 'not_found' });
+  const n = await db()('sessions').where({ user_id: user.id }).del();
+  await store.audit(req, 'user_logout_all', `${user.email} · ${n}`);
+  res.json({ users: await userList(), self: user.id === req.user.id });
+});
+
 router.post('/users/:id/unlock', async (req, res) => {
   const user = await db()('users').where({ id: Number(req.params.id) }).first();
   if (!user) return res.status(404).json({ error: 'not_found' });
@@ -93,21 +103,16 @@ router.post('/users/:id/unlock', async (req, res) => {
 });
 
 router.get('/settings', async (req, res) => {
-  res.json({ idleMinutes: await A.idleMinutes(), idleChoices: A.IDLE_CHOICES, deployCleanup: await store.getSetting('deploy_cleanup', true) });
+  res.json({ deployCleanup: await store.getSetting('deploy_cleanup', true) });
 });
 router.put('/settings', async (req, res) => {
   const changes = [];
-  if (req.body.idleMinutes !== undefined) {
-    const v = parseInt(req.body.idleMinutes, 10);
-    if (!A.IDLE_CHOICES.includes(v)) return res.status(422).json({ errors: { idleMinutes: 'invalid' } });
-    await store.setSetting('idle_minutes', v); A.clearIdleCache(); changes.push(`idle ${v} min`);
-  }
   if (req.body.deployCleanup !== undefined) { await store.setSetting('deploy_cleanup', !!req.body.deployCleanup); changes.push(`deploy cleanup ${req.body.deployCleanup ? 'on' : 'off'}`); }
   await store.audit(req, 'settings_updated', changes.join(', '));
-  res.json({ idleMinutes: await A.idleMinutes(), deployCleanup: await store.getSetting('deploy_cleanup', true) });
+  res.json({ deployCleanup: await store.getSetting('deploy_cleanup', true) });
 });
 
-const SECURITY = ['login', 'login_failed', 'login_locked', 'logout', 'auto_logout', 'password_reset_request', 'password_set', 'password_changed', 'user_invited', 'user_updated', 'user_link', 'user_unlocked', 'settings_updated', 'key_rotated'];
+const SECURITY = ['login', 'login_failed', 'login_locked', 'logout', 'logout_all', 'user_logout_all', 'auto_logout', 'password_reset_request', 'password_set', 'password_changed', 'user_invited', 'user_updated', 'user_link', 'user_unlocked', 'settings_updated', 'key_rotated'];
 router.get('/audit', async (req, res) => {
   let q = db()('audit_log').orderBy('id', 'desc').limit(100);
   if (req.query.filter === 'security') q = q.whereIn('action', SECURITY);

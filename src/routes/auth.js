@@ -21,7 +21,6 @@ async function mePayload(user) {
   return {
     user: { id: user.id, name: user.name, email: user.email, role: user.role, lang: user.lang },
     restaurants: rs.filter(r => user.restaurantIds.includes(r.id)).map(r => ({ id: r.id, name: r.name, color: r.color, timezone: r.timezone, short: r.short_code, online: r.online, slug: r.slug })),
-    idleMinutes: await A.idleMinutes(),
   };
 }
 
@@ -71,12 +70,20 @@ router.post('/login', loginLimit, async (req, res) => {
     return res.status(401).json({ error: 'invalid', left: null });
   }
   await k('users').where({ id: user.id }).update({ failed_logins: 0, locked_until: null, last_login_at: t });
-  await A.createSession(req, res, user);
+  await A.createSession(req, res, user, req.body.remember !== false);
   const u = { id: user.id, name: user.name, email: user.email, role: user.role, lang: user.lang };
   u.restaurantIds = await store.restaurantIdsFor(u);
   req.user = u;
   await store.audit(req, 'login', '');
   res.json(await mePayload(u));
+});
+
+/** Sign this user out on every device (lost phone, shared iPad…). */
+router.post('/logout-all', A.requireAuth, async (req, res) => {
+  const n = await db()('sessions').where({ user_id: req.user.id }).del();
+  await store.audit(req, 'logout_all', String(n));
+  res.clearCookie(A.COOKIE, { httpOnly: true, secure: config.secureCookies, sameSite: 'lax', path: '/' });
+  res.json({ ok: true, sessions: n });
 });
 
 router.post('/logout', async (req, res) => {
@@ -87,7 +94,6 @@ router.post('/logout', async (req, res) => {
 
 router.get('/me', async (req, res) => {
   if (!req.user) {
-    if (req.sessionEnded === 'idle') await store.audit(req, 'auto_logout', '', { actor: 'system', userId: null });
     return res.status(401).json({ error: 'auth', reason: req.sessionEnded || 'none' });
   }
   res.json(await mePayload(req.user));

@@ -1,15 +1,16 @@
-/* Saigon Taste Booking – manager app. Cool slate neutrals, cobalt accent; times in mono like a reservation book. */
+/* Saigon Taste Booking – manager app. Saigon Taste orange on warm neutrals; times in mono like a reservation book.
+   Accent is a deeper shade of the logo orange (#EF6B23) so white text on buttons stays readable (5.2:1). */
 :root{
-  --bg:#eef1f4; --surface:#ffffff; --sunk:#e4e8ee; --ink:#151b26; --muted:#5a6475; --line:#d2d8e1;
-  --accent:#2f4ea3; --on-accent:#ffffff; --accent-soft:#dfe6f7;
+  --bg:#f3f1ef; --surface:#ffffff; --sunk:#ebe6e2; --ink:#1f1a17; --muted:#665d57; --line:#ddd5cf;
+  --brand:#ef6b23; --accent:#b84a0e; --on-accent:#ffffff; --accent-soft:#fbe5d6;
   --ok:#11704f; --ok-soft:#d6efe4; --warn:#8a5b00; --warn-soft:#f6e8c4; --bad:#b0302b; --bad-soft:#f8dddb; --seat:#0f6a78; --seat-soft:#d3edf0; --off:#5a6475; --off-soft:#e4e8ee;
   --f-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --f-mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
   --r:10px; color-scheme:light;
 }
 @media (prefers-color-scheme: dark){:root{
-  --bg:#0f131a; --surface:#171c25; --sunk:#1f2531; --ink:#e3e8f0; --muted:#97a2b3; --line:#2b3340;
-  --accent:#8ea8f2; --on-accent:#0d1530; --accent-soft:#1f2a48;
+  --bg:#16120f; --surface:#1f1a16; --sunk:#2a231e; --ink:#f1ebe6; --muted:#aea39b; --line:#3b322b;
+  --brand:#f4894a; --accent:#f4894a; --on-accent:#2a1205; --accent-soft:#3c2416;
   --ok:#55c997; --ok-soft:#173a2c; --warn:#e2b453; --warn-soft:#382c12; --bad:#f08680; --bad-soft:#3f1e1e; --seat:#5fc4d2; --seat-soft:#163539; --off:#97a2b3; --off-soft:#232a35; color-scheme:dark}}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -28,8 +29,8 @@ a{color:var(--accent)}
 /* header */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--surface);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding-block:10px}
-.brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:-.02em;font-size:16px;white-space:nowrap;margin-right:auto}
-.brand i{font-style:normal;width:28px;height:28px;border-radius:7px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font:700 11px var(--f-mono)}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:-.02em;font-size:16px;white-space:nowrap;margin-right:auto;color:var(--ink)}
+.brand img{display:block;width:22px;height:30px}
 .who{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:12.5px;color:var(--muted)}
 .tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
@@ -149,7 +150,10 @@ a.copy{text-decoration:none}
 @media (prefers-reduced-motion:no-preference){.toast{animation:up .2s ease-out}@keyframes up{from{transform:translateY(8px);opacity:0}}}
 
 /* sign-in */
-.login{max-width:420px;margin:32px auto;display:flex;flex-direction:column;gap:14px}
+.login{max-width:420px;margin:24px auto;display:flex;flex-direction:column;gap:14px}
+.login-brand{display:flex;justify-content:center;padding:4px 0 2px}
+.login-brand img{width:150px;height:auto}
+@media (max-width:520px){.login-brand img{width:120px}}
 
 /* print sheet (A4) */
 .print{background:#fff;color:#111;min-height:100vh;color-scheme:light}
@@ -165,7 +169,7 @@ a.copy{text-decoration:none}
 /* ===== icons, menu, phone layout ===== */
 .ic{flex:none;display:block}
 .tabs button .ic{display:none}
-.menu-btn{display:none;gap:4px;padding:6px 10px}
+.menu-btn{display:inline-flex;gap:4px;padding:6px 10px}
 .btn.pri.danger{background:var(--bad);border-color:var(--bad);color:#fff}
 .btn.pri.danger:hover:not(:disabled){background:var(--bad);filter:brightness(1.08)}
 a.tel{display:inline-flex;align-items:center;gap:4px}
@@ -234,3 +238,5 @@ a.tel{display:inline-flex;align-items:center;gap:4px}
   .grid-app>.p-pending>h2{display:none}
   .hint b{font-size:13px}
 }
+.sheet .seg{align-self:flex-start}
+@media (prefers-color-scheme: dark){.rtag{background:color-mix(in srgb,var(--rc) 35%,var(--surface));color:color-mix(in srgb,var(--rc) 35%,#ffffff)}}

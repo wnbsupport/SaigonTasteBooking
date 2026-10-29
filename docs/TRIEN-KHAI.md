@@ -171,8 +171,9 @@ Làm cho từng website (mandolinerestaurant.com.au, touchstonecafe.au):
 1. **Tài khoản → Thêm người dùng**: nhập họ tên, email, vai trò **Nhân viên**, chọn quán và ngôn ngữ, rồi **Gửi lời mời**. Nhân viên nhận email để tự đặt mật khẩu. Nếu email chưa tới, gửi họ link hiện trên màn hình.
 2. Trên iPad hoặc điện thoại ở quầy:
    - Mở app bằng Safari, bấm **Chia sẻ → Thêm vào MH chính**.
-   - Mở app từ biểu tượng trên màn hình chính, đăng nhập, bật **🔔 Âm thanh**.
-3. **Tài khoản → Bảo mật**: chọn thời gian tự đăng xuất. iPad quầy dùng cả ca thì nên chọn 4 giờ hoặc 12 giờ.
+   - Mở app từ biểu tượng Saigon Taste trên màn hình chính, đăng nhập, bật **🔔 Âm thanh** trong menu ☰.
+3. Khi đăng nhập trên iPad/điện thoại ở quầy, để tick **Ghi nhớ đăng nhập**: app không tự đăng xuất, mở lại là dùng được ngay. Trên máy lạ hoặc máy dùng chung thì bỏ tick.
+4. Nhân viên nghỉ việc hoặc mất máy: **Tài khoản → Sửa → Đăng xuất khỏi mọi thiết bị**, rồi bỏ tick **Đang hoạt động** nếu không cho dùng nữa.
 
 ---
 

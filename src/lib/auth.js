@@ -1,26 +1,20 @@
 'use strict';
-// Sign-in sessions (cookie → sessions table), idle sign-out, lockout after wrong passwords, and role checks.
+// Sign-in sessions (cookie → sessions table), "remember me", lockout after wrong passwords, and role checks.
 const bcrypt = require('bcryptjs');
 const config = require('../config');
 const { db } = require('../db');
 const { randomToken, sha256 } = require('./crypto');
-const { getSetting, restaurantIdsFor } = require('./store');
+const { restaurantIdsFor } = require('./store');
 
 const COOKIE = 'st_sid';
 const MAX_FAILS = 5;
 const LOCK_MIN = 15;
-const SESSION_DAYS = 30;
-const DEFAULT_IDLE = 30;
-const IDLE_CHOICES = [15, 30, 60, 240, 720];
-
-let idleCache = { at: 0, v: DEFAULT_IDLE };
-async function idleMinutes() {
-  if (Date.now() - idleCache.at < 30000) return idleCache.v;
-  const v = await getSetting('idle_minutes', DEFAULT_IDLE);
-  idleCache = { at: Date.now(), v: IDLE_CHOICES.includes(v) ? v : DEFAULT_IDLE };
-  return idleCache.v;
-}
-function clearIdleCache() { idleCache.at = 0; }
+// No automatic sign-out while the app is in use.
+// "Remember me": the session lasts until the device has not used the app for 90 days (renewed on use).
+// Not remembered: the cookie ends when the browser/app is closed; the server forgets it after 2 days unused.
+const REMEMBER_DAYS = 90;
+const SHORT_DAYS = 2;
+const TOUCH_MS = 10 * 60000; // refresh last-seen (and the remember cookie) at most every 10 minutes
 
 const hashPassword = pw => bcrypt.hash(pw, 10);
 // A real hash for unknown accounts, so a wrong email takes as long as a wrong password (no account probing by timing).
@@ -38,40 +32,44 @@ function readCookie(req, name) {
 }
 function cookieOpts() { return { httpOnly: true, secure: config.secureCookies, sameSite: 'lax', path: '/' }; }
 
-async function createSession(req, res, user) {
+function setCookie(res, token, remember) {
+  res.cookie(COOKIE, token, remember ? { ...cookieOpts(), maxAge: REMEMBER_DAYS * 864e5 } : cookieOpts());
+}
+async function createSession(req, res, user, remember = true) {
   const token = randomToken(32);
   const t = Date.now();
-  await db()('sessions').insert({ id: sha256(token), user_id: user.id, created_at: t, last_seen_at: t, ip: String(req.ip || '').slice(0, 64), user_agent: String(req.get('user-agent') || '').slice(0, 255) });
-  res.cookie(COOKIE, token, { ...cookieOpts(), maxAge: SESSION_DAYS * 864e5 });
+  await db()('sessions').insert({ id: sha256(token), user_id: user.id, created_at: t, last_seen_at: t, remember: !!remember, ip: String(req.ip || '').slice(0, 64), user_agent: String(req.get('user-agent') || '').slice(0, 255) });
+  setCookie(res, token, remember);
 }
 async function destroySession(req, res) {
   const token = readCookie(req, COOKIE);
   if (token) await db()('sessions').where({ id: sha256(token) }).del();
   res.clearCookie(COOKIE, cookieOpts());
 }
+const sessionLimit = s => (s.remember ? REMEMBER_DAYS : SHORT_DAYS) * 864e5;
 
-/** Attach req.user if the cookie is valid. Background polling (X-Background: 1) does not count as activity. */
+/** Attach req.user if the cookie is valid. Any request (including the app's background refresh) counts as use. */
 async function loadUser(req, res, next) {
   const token = readCookie(req, COOKIE);
   if (!token) return next();
   const id = sha256(token);
   const s = await db()('sessions').where({ id }).first();
-  if (!s) { res.clearCookie(COOKIE, cookieOpts()); return next(); }
+  if (!s) { res.clearCookie(COOKIE, cookieOpts()); req.sessionEnded = 'ended'; return next(); }
   const t = Date.now();
-  const idle = await idleMinutes();
-  if (t - Number(s.last_seen_at) > idle * 60000 || t - Number(s.created_at) > SESSION_DAYS * 864e5) {
+  if (t - Number(s.last_seen_at) > sessionLimit(s)) {
     await db()('sessions').where({ id }).del();
     res.clearCookie(COOKIE, cookieOpts());
-    req.sessionEnded = 'idle';
+    req.sessionEnded = 'expired';
     return next();
   }
   const user = await db()('users').where({ id: s.user_id }).first();
-  if (!user || !user.active) { await db()('sessions').where({ id }).del(); res.clearCookie(COOKIE, cookieOpts()); return next(); }
+  if (!user || !user.active) { await db()('sessions').where({ id }).del(); res.clearCookie(COOKIE, cookieOpts()); req.sessionEnded = 'ended'; return next(); }
   req.user = { id: user.id, name: user.name, email: user.email, role: user.role, lang: user.lang };
   req.user.restaurantIds = await restaurantIdsFor(req.user);
   req.sessionId = id;
-  if (req.get('x-background') !== '1' && t - Number(s.last_seen_at) > 20000) {
+  if (t - Number(s.last_seen_at) > TOUCH_MS) {
     await db()('sessions').where({ id }).update({ last_seen_at: t });
+    if (s.remember) setCookie(res, token, true); // keep the 90 days rolling in the browser too
   }
   next();
 }
@@ -96,4 +94,4 @@ function sameOrigin(req, res, next) {
   return res.status(403).json({ error: 'origin' });
 }
 
-module.exports = { COOKIE, MAX_FAILS, LOCK_MIN, IDLE_CHOICES, DEFAULT_IDLE, idleMinutes, clearIdleCache, hashPassword, checkPassword, passwordProblem, createSession, destroySession, loadUser, requireAuth, requireOwner, sameOrigin, readCookie };
+module.exports = { COOKIE, MAX_FAILS, LOCK_MIN, REMEMBER_DAYS, SHORT_DAYS, hashPassword, checkPassword, passwordProblem, createSession, destroySession, loadUser, requireAuth, requireOwner, sameOrigin, readCookie };
