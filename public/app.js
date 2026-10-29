@@ -39,6 +39,8 @@ const DICT = {
     guestKnown: 'Khách này đã đặt {n} lần: {s} lần đến, {x} lần không đến.',
     e_required: 'Bắt buộc.', e_invalid: 'Không hợp lệ.', e_phone: 'SĐT Úc không hợp lệ.', e_email: 'Email không hợp lệ.', e_party: 'Số khách không hợp lệ.', e_name: 'Nhập tên khách.', e_time_outside: 'Giờ này ngoài giờ mở cửa của quán (hoặc đã qua).', e_time_full: 'Khung giờ này đã đủ khách.', e_time_required: 'Chọn ngày và giờ.', e_dup: 'Khách này đã có booking trong ngày tại quán (mã {r}).',
     loadTitle: 'Khách trong quán theo giờ', loadNow: 'Lúc {a}–{b}: tối đa {n}{c} khách trong quán (đã tính booking này).', loadOver: 'Vượt sức chứa: lúc {a}–{b} có tối đa {n}/{c} khách.', loadAdd: 'Lúc {a}–{b}: đang có tối đa {n}{c} khách, thêm booking này thành {m}{c}.', loadAddOver: 'Thêm booking này sẽ vượt sức chứa ({m}/{c} khách lúc {a}–{b}).', loadNeedOverride: ' Tick “Cho phép … vượt sức chứa” nếu vẫn muốn nhận.', loadStaffOver: ' Hệ thống sẽ không cho lưu, chọn giờ khác hoặc báo chủ.',
+    menu: 'Menu', mPending: 'Cần xác nhận', mDay: 'Theo ngày', andMore: 'và {n} booking khác', call: 'Gọi',
+    del: 'Xóa đơn', delTitle: 'Xóa đơn này?', delText: 'Đơn bị xóa vĩnh viễn khỏi hệ thống (kể cả lịch sử và email đã gửi). Khách không nhận được email nào. Thao tác được ghi vào Nhật ký.', delConfirmedWarn: 'Khách đã được xác nhận. Nếu khách không đến nữa, nên bấm Hủy để giữ lịch sử; chỉ Xóa khi đây là đơn thử hoặc đơn rác.', delReason: 'Lý do (ghi vào nhật ký, không bắt buộc)', delGo: 'Xóa vĩnh viễn', deleted: 'Đã xóa đơn',
     printTitle: 'Danh sách khách', printBtn: 'In', csv: 'Tải CSV', notConfirmed: 'chưa xác nhận', total: 'Tổng', venue: 'Quán', pax: 'Số', guest: 'Khách',
     serverErr: 'Có lỗi máy chủ. Thử lại sau ít phút.', netErr: 'Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.', saved: 'Đã lưu',
     // restaurants
@@ -64,7 +66,7 @@ const DICT = {
     lf_all: 'Tất cả', lf_bookings: 'Booking & cài đặt', lf_security: 'Đăng nhập & bảo mật', when: 'Thời gian', who: 'Người làm', what: 'Hành động', detail: 'Chi tiết', more: 'Xem thêm', logRo: 'Nhật ký chỉ đọc, không ai sửa hay xóa được, kể cả chủ.', noLog: 'Chưa có hoạt động.',
     a_login: 'Đăng nhập', a_login_failed: 'Đăng nhập sai', a_login_locked: 'Khóa đăng nhập', a_logout: 'Đăng xuất', a_auto_logout: 'Tự đăng xuất (không dùng)', a_password_reset_request: 'Yêu cầu đặt lại mật khẩu', a_password_set: 'Đặt mật khẩu', a_password_changed: 'Đổi mật khẩu', a_lang_changed: 'Đổi ngôn ngữ',
     a_booking_created_web: 'Booking mới từ website', a_booking_created_staff: 'Nhân viên thêm booking', a_booking_confirm: 'Xác nhận booking', a_booking_decline: 'Từ chối booking', a_booking_cancel: 'Hủy booking', a_booking_seated: 'Đánh dấu đã đến', a_booking_noshow: 'Đánh dấu không đến', a_booking_undo: 'Hoàn tác', a_booking_expired: 'Booking hết hạn',
-    a_csv_export: 'Xuất CSV', a_print: 'In danh sách khách', a_restaurant_created: 'Thêm quán', a_restaurant_updated: 'Sửa cài đặt quán', a_key_rotated: 'Tạo khóa kết nối mới', a_mail_test: 'Gửi thử email', a_user_invited: 'Mời người dùng', a_user_updated: 'Sửa người dùng', a_user_link: 'Gửi link mật khẩu', a_user_unlocked: 'Mở khóa đăng nhập', a_settings_updated: 'Sửa cài đặt bảo mật', a_deploy_cleanup: 'Dọn bản deploy cũ',
+    a_booking_deleted: 'Xóa đơn', a_csv_export: 'Xuất CSV', a_print: 'In danh sách khách', a_restaurant_created: 'Thêm quán', a_restaurant_updated: 'Sửa cài đặt quán', a_key_rotated: 'Tạo khóa kết nối mới', a_mail_test: 'Gửi thử email', a_user_invited: 'Mời người dùng', a_user_updated: 'Sửa người dùng', a_user_link: 'Gửi link mật khẩu', a_user_unlocked: 'Mở khóa đăng nhập', a_settings_updated: 'Sửa cài đặt bảo mật', a_deploy_cleanup: 'Dọn bản deploy cũ',
     weekdays: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'], wd: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
   },
   en: {
@@ -95,6 +97,8 @@ const DICT = {
     guestKnown: 'This guest has booked {n} time(s): {s} visit(s), {x} no-show(s).',
     e_required: 'Required.', e_invalid: 'Not valid.', e_phone: 'Not a valid Australian number.', e_email: 'Not a valid email.', e_party: 'Invalid number of guests.', e_name: 'Enter the guest name.', e_time_outside: 'That time is outside opening hours (or already passed).', e_time_full: 'That time slot is full.', e_time_required: 'Choose a date and time.', e_dup: 'This guest already has a booking that day (ref {r}).',
     loadTitle: 'Guests in the restaurant by time', loadNow: '{a}–{b}: at most {n}{c} guests in the restaurant (this booking included).', loadOver: 'Over capacity: up to {n}/{c} guests at {a}–{b}.', loadAdd: '{a}–{b}: up to {n}{c} guests now, {m}{c} with this booking.', loadAddOver: 'This booking would go over capacity ({m}/{c} guests at {a}–{b}).', loadNeedOverride: ' Tick “Allow … over capacity” to take it anyway.', loadStaffOver: ' It cannot be saved; choose another time or ask the owner.',
+    menu: 'Menu', mPending: 'To confirm', mDay: 'By day', andMore: 'and {n} more', call: 'Call',
+    del: 'Delete', delTitle: 'Delete this booking?', delText: 'The booking is removed for good (including its history and sent emails). The guest gets no email. This is recorded in the Activity log.', delConfirmedWarn: 'This guest was confirmed. If they are not coming, Cancel keeps the history; delete only test or spam bookings.', delReason: 'Reason (for the log, optional)', delGo: 'Delete for good', deleted: 'Booking deleted',
     printTitle: 'Guest list', printBtn: 'Print', csv: 'Download CSV', notConfirmed: 'not confirmed', total: 'Total', venue: 'Venue', pax: 'Pax', guest: 'Guest',
     serverErr: 'Server error. Please try again shortly.', netErr: 'Can\'t reach the server. Check the connection and try again.', saved: 'Saved',
     addRest: '+ Add restaurant', paused: ' · paused', details_: 'Restaurant details', online: 'Taking online bookings', name: 'Name', website: 'Website (blank if none)', labelColor: 'Label colour', tz: 'Time zone', restPhone: 'Phone', restEmail: 'Restaurant email (new-booking alerts and guest replies)', address: 'Address (shown in emails)', extraNote: 'Extra note in the confirmation email', privacy: 'Privacy policy link (https://…)',
@@ -117,7 +121,7 @@ const DICT = {
     lf_all: 'All', lf_bookings: 'Bookings & settings', lf_security: 'Sign-in & security', when: 'Time', who: 'Who', what: 'Action', detail: 'Details', more: 'Load more', logRo: 'The log is read-only. Nobody can edit or delete entries, including the owner.', noLog: 'No activity yet.',
     a_login: 'Signed in', a_login_failed: 'Failed sign-in', a_login_locked: 'Sign-in locked', a_logout: 'Signed out', a_auto_logout: 'Auto sign-out (idle)', a_password_reset_request: 'Password reset requested', a_password_set: 'Password set', a_password_changed: 'Password changed', a_lang_changed: 'Language changed',
     a_booking_created_web: 'New website booking', a_booking_created_staff: 'Booking added by staff', a_booking_confirm: 'Booking confirmed', a_booking_decline: 'Booking declined', a_booking_cancel: 'Booking cancelled', a_booking_seated: 'Marked arrived', a_booking_noshow: 'Marked no-show', a_booking_undo: 'Undo', a_booking_expired: 'Booking expired',
-    a_csv_export: 'CSV exported', a_print: 'Guest list printed', a_restaurant_created: 'Restaurant added', a_restaurant_updated: 'Restaurant settings changed', a_key_rotated: 'Connection key replaced', a_mail_test: 'Test email', a_user_invited: 'User invited', a_user_updated: 'User changed', a_user_link: 'Password link sent', a_user_unlocked: 'Sign-in unlocked', a_settings_updated: 'Security settings changed', a_deploy_cleanup: 'Old deploys removed',
+    a_booking_deleted: 'Booking deleted', a_csv_export: 'CSV exported', a_print: 'Guest list printed', a_restaurant_created: 'Restaurant added', a_restaurant_updated: 'Restaurant settings changed', a_key_rotated: 'Connection key replaced', a_mail_test: 'Test email', a_user_invited: 'User invited', a_user_updated: 'User changed', a_user_link: 'Password link sent', a_user_unlocked: 'Sign-in unlocked', a_settings_updated: 'Security settings changed', a_deploy_cleanup: 'Old deploys removed',
     weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], wd: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
   },
 };
@@ -193,6 +197,18 @@ const errText = (field, code, extra = {}) => {
   if (code === 'no_key') return t('noEncKey');
   return t('e_' + code) || t('e_invalid', extra);
 };
+
+/* ============ icons (inline SVG, inherit colour) ============ */
+const ICON = {
+  list: '<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+  rest: '<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>',
+  users: '<path d="M16 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M21 19v-1a4 4 0 0 0-3-3.87M15.5 3.13a3.5 3.5 0 0 1 0 6.75"/>',
+  log: '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6M8 13h8M8 17h5"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+};
+const icon = (k, size = 20) => `<svg class="ic" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
 
 /* ============ state ============ */
 const S = {
@@ -301,14 +317,23 @@ function render() {
   const u = S.me.user;
   const tabs = [['list', t('tBookings')], ...(isOwner() ? [['rest', t('tRest')], ['users', t('tUsers')], ['log', t('tLog')]] : [])];
   if (!tabs.some(x => x[0] === S.tab)) S.tab = 'list';
+  const whoLine = `${esc(u.name)} · ${isOwner() ? t('owner') : t('staff') + ' – ' + S.restaurants.map(r => esc(r.name)).join(', ')}`;
   $('#root').innerHTML = `<header class="top"><div class="wrap">
       <div class="brand"><i>ST</i>Saigon Taste</div>
-      <div class="who"><span>${esc(u.name)} · ${isOwner() ? t('owner') : t('staff') + ' – ' + S.restaurants.map(r => esc(r.name)).join(', ')}</span>
+      <div class="who"><span>${whoLine}</span>
         ${langSeg('lang')}
         <label class="check small" for="snd"><input type="checkbox" id="snd" ${S.sound ? 'checked' : ''}> 🔔 ${t('sound')}</label>
         <button class="btn sm" id="logout">${t('signOut')}</button></div>
-    </div><div class="wrap"><nav class="tabs">${tabs.map(([k, l]) => `<button data-tab="${k}" aria-current="${S.tab === k}">${l}${k === 'list' && S.summary.pending ? ` <span class="badge">${S.summary.pending}</span>` : ''}</button>`).join('')}</nav></div></header>
-    <main class="wrap app" id="main"><div id="offline"></div><div id="pane"></div></main>`;
+      <button class="btn sm menu-btn" id="menu" aria-label="${t('menu')}">${S.sound ? '🔔' : ''}${icon('menu')}</button>
+    </div><div class="wrap"><nav class="tabs${tabs.length < 2 ? ' one' : ''}">${tabs.map(([k, l]) => `<button data-tab="${k}" aria-current="${S.tab === k}">${icon(k)}<span class="tl">${l}</span>${k === 'list' && S.summary.pending ? `<span class="badge">${S.summary.pending}</span>` : ''}</button>`).join('')}</nav></div></header>
+    <main class="wrap app${tabs.length < 2 ? ' nonav' : ''}" id="main"><div id="offline"></div><div id="pane"></div></main>`;
+  $('#menu').onclick = () => sheet(`<h2>${t('menu')}</h2><p>${whoLine}</p>${langSeg('mlang')}
+      <label class="check" for="msnd"><input type="checkbox" id="msnd" ${S.sound ? 'checked' : ''}> 🔔 ${t('sound')}</label>
+      <div class="row end"><button class="btn" data-close>${t('close')}</button><button class="btn dang" id="mlogout">${t('signOut')}</button></div>`, () => {
+    $$('#mlang [data-l]').forEach(b => b.onclick = async () => { setLang(b.dataset.l); closeSheet(); try { await api('PATCH', '/api/auth/me', { lang: LANG }); } catch { /* keep local */ } render(); });
+    $('#msnd').onchange = e => { S.sound = e.target.checked; ls.set('sound', S.sound); if (S.sound) { chime(); toast(t('soundOn')); } else toast(t('soundOff')); closeSheet(); render(); };
+    $('#mlogout').onclick = () => { closeSheet(); $('#logout').click(); };
+  });
   $$('[data-tab]').forEach(b => b.onclick = () => { S.tab = b.dataset.tab; ls.set('tab', S.tab); render(); });
   $$('#lang [data-l]').forEach(b => b.onclick = async () => { setLang(b.dataset.l); try { await api('PATCH', '/api/auth/me', { lang: LANG }); } catch { /* keep local */ } render(); });
   $('#snd').onchange = e => { S.sound = e.target.checked; ls.set('sound', S.sound); if (S.sound) { chime(); toast(t('soundOn')); } else toast(t('soundOff')); };
@@ -343,7 +368,8 @@ function applySummary(s) {
   lastUnseen = ids;
   S.summary = s;
   document.title = (s.pending ? `(${s.pending}) ` : '') + 'Saigon Taste Booking';
-  const tb = $('[data-tab="list"]'); if (tb) tb.innerHTML = `${t('tBookings')}${s.pending ? ` <span class="badge">${s.pending}</span>` : ''}`;
+  const tb = $('[data-tab="list"]'); if (tb) tb.innerHTML = `${icon('list')}<span class="tl">${t('tBookings')}</span>${s.pending ? `<span class="badge">${s.pending}</span>` : ''}`;
+  const ms = $('#mseg-p'); if (ms) ms.textContent = `${t('mPending')} · ${s.pending}`;
 }
 ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, () => { S.lastActive = Date.now(); unlockAudio(); }, { passive: true }));
 function unlockAudio() { if (!S.sound) return; try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume(); } catch { /* no audio */ } }
@@ -371,12 +397,13 @@ function card(b, showDate) {
   const acts = { pending: act('confirm', 'pri') + act('decline'), confirmed: act('seated') + act('noshow') + act('cancel', 'dang'), seated: act('undo', 'ghost'), noshow: act('undo', 'ghost') }[b.status] || '';
   return `<div class="bk${!b.seen ? ' fresh' : ''}"><div class="t">${esc(b.time)}${showDate ? `<small>${dayShort(b.date)}</small>` : ''}</div><div class="main">
     <div class="nm">${esc(b.name)} <span class="muted" style="font-weight:600">· ${b.party} ${t('guests')}</span>${!b.seen ? `<span class="chip new">${t('newChip')}</span>` : ''}<span class="chip st-${b.status}">${t('st_' + b.status)}</span>${late ? `<span class="chip late">⏱ ${t('waitFor', { d: dur(wait) })}</span>` : ''}${S.restaurants.length > 1 ? `<span class="rtag" style="--rc:${esc(r.color)}">${esc(r.name)}</span>` : ''}</div>
-    <div class="meta"><a class="copy" href="tel:${esc(b.phone)}">${esc(b.phoneFmt)}</a>${b.email ? `<span class="copy">${esc(b.email)}</span>` : ''}<span>${b.source === 'staff' ? t('byStaff') : b.source === 'hosted' ? t('hosted') : t('web')} · ${ago(b.createdAt)}</span></div>
+    <div class="meta"><a class="copy tel" href="tel:${esc(b.phone)}">${icon('phone', 13)} ${esc(b.phoneFmt)}</a>${b.email ? `<span class="copy">${esc(b.email)}</span>` : ''}<span>${b.source === 'staff' ? t('byStaff') : b.source === 'hosted' ? t('hosted') : t('web')} · ${ago(b.createdAt)}</span></div>
     ${guestChips(b)}
     ${b.note ? `<div class="req">${esc(b.note)}</div>` : ''}
     ${b.status === 'declined' && b.declineReason ? `<div class="meta">${t('decline')}: ${esc(b.declineReason)}</div>` : ''}${b.status === 'cancelled' && b.cancelReason ? `<div class="meta">${t('cancel')}: ${esc(b.cancelReason)}</div>` : ''}
     <div class="acts">${acts}<button class="btn sm ghost" data-act="details" data-id="${b.id}">${t('details')}</button></div></div></div>`;
 }
+const mview = () => S.mview || (S.pending.length ? 'pending' : 'day');
 async function listView() {
   const pane = $('#pane'); if (!pane) return;
   const q = `restaurant=${S.rid}`;
@@ -393,22 +420,26 @@ async function listView() {
   const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
   pane.innerHTML = `<div class="stack">
     ${!standalone && !ls.get('pwaHintDone', false) ? `<div class="panel hint"><div style="min-width:0;flex:1"><b>${t('pwaTitle')}</b><p class="muted small">${t('pwaText')}</p></div><button class="btn sm" id="hintok">${t('gotIt')}</button></div>` : ''}
-    ${unseen.length ? `<div class="alert" role="status"><span class="bell" aria-hidden="true">🔔</span><div style="min-width:0;flex:1"><b>${t('newArrived', { n: unseen.length })}</b><div class="muted small">${unseen.slice(0, 6).map(b => `${esc(b.name)} · ${b.party} · ${esc(b.time)} ${dayShort(b.date)} · ${esc(rest(b.restaurantId).name)}`).join('<br>')}</div></div><button class="btn sm" id="seen">${t('markSeen')}</button></div>` : ''}
-    <div class="grid-app">
-      <section class="panel ${S.pending.length ? 'pending' : ''}"><h2>${t('waiting')} · ${S.pending.length}</h2>
+    ${unseen.length ? `<div class="alert" role="status"><span class="bell" aria-hidden="true">🔔</span><div style="min-width:0;flex:1"><b>${t('newArrived', { n: unseen.length })}</b><div class="muted small">${unseen.slice(0, 3).map(b => `${esc(b.name)} · ${b.party} · ${esc(b.time)} ${dayShort(b.date)}${S.restaurants.length > 1 ? ' · ' + esc(rest(b.restaurantId).name) : ''}`).join('<br>')}${unseen.length > 3 ? `<br>${t('andMore', { n: unseen.length - 3 })}` : ''}</div></div><button class="btn sm" id="seen">${t('markSeen')}</button></div>` : ''}
+    <div class="seg mseg" role="group"><button id="mseg-p" data-mv="pending" aria-pressed="${mview() === 'pending'}">${t('mPending')} · ${S.pending.length}</button><button data-mv="day" aria-pressed="${mview() === 'day'}">${t('mDay')}</button></div>
+    <div class="grid-app" data-show="${mview()}">
+      <section class="panel p-pending ${S.pending.length ? 'pending' : ''}"><h2>${t('waiting')} · ${S.pending.length}</h2>
         ${S.pending.length ? `<div class="list">${S.pending.map(b => card(b, true)).join('')}</div>` : `<p class="muted">${t('nothingWaiting')}</p>`}</section>
-      <section class="panel stack" style="gap:12px">
+      <section class="panel stack p-day" style="gap:12px">
         <div class="filters">
           <div class="datenav"><button class="btn sm" id="dprev" aria-label="${t('prevDay')}">‹</button><input type="date" id="dpick" value="${S.date}" aria-label="${t('date')}"><button class="btn sm" id="dnext" aria-label="${t('nextDay')}">›</button>${S.date !== today ? `<button class="btn sm ghost" id="dtoday">${t('today')}</button>` : ''}</div>
           ${S.restaurants.length > 1 ? `<select id="rsel" style="width:auto" aria-label="${t('restaurant')}"><option value="all">${t('allRest')}</option>${S.restaurants.map(r => `<option value="${r.id}" ${String(S.rid) === String(r.id) ? 'selected' : ''}>${esc(r.name)}</option>`).join('')}</select>` : ''}
-          <div class="row" style="margin-left:auto"><a class="btn sm" href="/print?date=${S.date}&restaurant=${S.rid}">${t('print')}</a><button class="btn sm pri" id="add">${t('add')}</button></div>
+          <div class="row fil-end"><a class="btn sm" href="/print?date=${S.date}&restaurant=${S.rid}">${t('print')}</a><button class="btn sm pri desk" id="add">${t('add')}</button></div>
         </div>
         <h2 style="font-size:15px">${dayFull(S.date)}${S.date === today ? t('todaySuffix') : ''}</h2>
         <div class="stats"><div class="stat"><b>${live.length}</b><span>${t('bookingsN')}</span></div><div class="stat"><b>${guests}</b><span>${t('guestsExp')}</span></div><div class="stat"><b>${counts.pending || 0}</b><span>${t('pendingN')}</span></div></div>
         ${loadHtml(load)}
         <div class="pills">${[['all', S.day.length], ...['pending', 'confirmed', 'seated', 'noshow', 'declined', 'cancelled', 'expired'].map(k => [k, counts[k] || 0])].filter(x => x[0] === 'all' || x[1]).map(([k, n]) => `<button class="pill" data-st="${k}" aria-pressed="${S.status === k}">${k === 'all' ? t('all') : t('st_' + k)} ${n}</button>`).join('')}</div>
         ${shown.length ? `<div class="list">${shown.map(b => card(b, false)).join('')}</div>` : `<p class="empty">${t('noneDay')}</p>`}
-      </section></div></div>`;
+      </section></div></div>
+    <button class="fab" id="fab" aria-label="${t('add')}">${icon('plus', 26)}</button>`;
+  $$('[data-mv]').forEach(b => b.onclick = () => { S.mview = b.dataset.mv; listView(); window.scrollTo(0, 0); });
+  $('#fab').onclick = addSheet;
   const go = d => { S.date = d; listView(); };
   $('#dprev').onclick = () => go(addDays(S.date, -1)); $('#dnext').onclick = () => go(addDays(S.date, 1));
   $('#dpick').onchange = e => e.target.value && go(e.target.value);
@@ -496,13 +527,25 @@ async function detailSheet(id) {
     <div><h3 class="sec">${t('hist')}</h3><ul class="hist">${d.events.map(e => `<li><span class="mono">${stamp(e.at)}</span> · ${esc(t('ev_' + e.kind, { d: e.detail }))}${e.detail && !/^email_|reminded/.test(e.kind) ? ` · ${esc(e.detail)}` : ''}<br><span class="muted">${actor(e.actor)}</span></li>`).join('')}</ul></div>
     ${d.history.length ? `<div><h3 class="sec">${t('otherBookings')}</h3><ul class="hist">${d.history.map(x => `<li><span class="mono">${dayShort(x.date)} ${esc(x.time)}</span> · ${esc(rest(x.restaurantId).name)} · ${x.party} ${t('guests')} <span class="chip st-${x.status}">${t('st_' + x.status)}</span></li>`).join('')}</ul></div>` : ''}
     ${d.emails.length ? `<div><h3 class="sec">${t('emailsSent')}</h3><ul class="hist">${d.emails.map(m => `<li><button class="linkbtn" data-mail="${m.id}">${esc(m.subject)}</button><br><span class="muted">${esc(m.to)} · ${stamp(m.at)} · ${t('em_' + m.status)}${m.via && t('via_' + m.via) ? ' · ' + t('via_' + m.via) : ''}${m.error && m.status !== 'sent' ? ' · ' + esc(m.error) : ''}</span></li>`).join('')}</ul></div>` : ''}
-    <div class="row end"><button class="btn" data-close>${t('close')}</button></div>`, () => {
+    <div class="row end">${isOwner() || b.status === 'pending' ? `<button class="btn dang" id="delb" style="margin-right:auto">${t('del')}</button>` : ''}<button class="btn" data-close>${t('close')}</button></div>`, () => {
+    const db = $('#delb'); if (db) db.onclick = () => deleteSheet(b);
     $$('[data-mail]').forEach(x => x.onclick = async () => {
       let m; try { m = await api('GET', `/api/emails/${x.dataset.mail}`); } catch { return; }
       sheet(`<h2>${t('emailView')}</h2>${mailBlock({ from: m.from, to: m.to, replyTo: m.replyTo, subject: m.subject })}<p class="muted small">${t('em_' + m.status)}${m.error && m.status !== 'sent' ? ' · ' + esc(m.error) : ''}</p><div class="row end"><button class="btn" id="bk">${t('back')}</button><button class="btn" data-close>${t('close')}</button></div>`, s => { fillFrame(s, m.html); $('#bk').onclick = () => detailSheet(id); });
     });
   });
   if (!b.seen) { api('POST', '/api/bookings/seen', { ids: [b.id] }).then(() => poll(true)).catch(() => {}); }
+}
+function deleteSheet(b) {
+  sheet(`<h2>${t('delTitle')}</h2>${summaryHtml(b)}<p class="note bad">${t('delText')}</p>${['confirmed', 'seated'].includes(b.status) ? `<p class="note warn">${t('delConfirmedWarn')}</p>` : ''}
+    <label class="f" for="delr">${t('delReason')}<input id="delr" maxlength="200"></label>
+    <div class="row end"><button class="btn" data-close>${t('no')}</button><button class="btn pri danger" id="delgo">${t('delGo')}</button></div>`, () => {
+    $('#delgo').onclick = async e => {
+      e.target.disabled = true;
+      try { await api('DELETE', `/api/bookings/${b.id}`, { reason: $('#delr').value.trim() }); closeSheet(); toast(t('deleted')); listView(); }
+      catch (err) { if (err.status === 409 || err.status === 404) { closeSheet(); toast(t('changed')); listView(); } else if (e.target.isConnected) e.target.disabled = false; }
+    };
+  });
 }
 function addSheet() {
   const rids = S.restaurants.map(r => r.id);
@@ -639,7 +682,7 @@ async function restView(selectId) {
         <div class="set-days">${[1, 2, 3, 4, 5, 6, 0].map(d => `<span>${t('weekdays')[d]}</span><div><input id="w-${d}" class="mono" value="${esc(r.week[d])}" placeholder="${t('closed')}"><span class="err" id="we-${d}"></span></div>`).join('')}</div></section>
       <section class="panel stack" style="gap:10px"><h2 class="h" style="margin:0">${t('special')}</h2><p class="muted small">${t('specialHelp')}</p>
         <div id="sp" class="stack" style="gap:8px"></div><button class="btn sm" type="button" id="spadd" style="align-self:flex-start">${t('addDate')}</button><span class="err" id="sperr"></span></section>
-      <div class="row end"><span class="err" id="ferr"></span><button class="btn pri" type="submit" id="ssave">${t('save')}</button></div>
+      <div class="row end savebar"><span class="err" id="ferr"></span><button class="btn pri" type="submit" id="ssave">${t('save')}</button></div>
     </div></form></div>`;
   let specials = r.specials.map(x => ({ ...x }));
   const drawSp = () => {

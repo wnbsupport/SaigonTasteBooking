@@ -1,6 +1,6 @@
 {
   "name": "saigontaste-booking",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Saigon Taste Booking – quản lý đặt bàn trung tâm cho các nhà hàng",
   "main": "index.js",
   "scripts": {

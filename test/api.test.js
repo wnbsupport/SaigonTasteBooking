@@ -285,6 +285,26 @@ test('restaurant settings validate hours and special dates; new restaurant gets 
   assert.equal(page.status, 200); assert.match(page.text, /Saigon Taste Richmond/);
 });
 
+test('delete: owners remove any booking, staff only pending ones; the log keeps a record', async () => {
+  const tom = H.client();
+  assert.equal((await tom.login('tom@test.au', 'tom-password-1')).status, 200);
+  const r1 = await fetch(`${base()}/api/public/v1/r/touchstone-cafe/book`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(guestBody({ date: H.dayIn(3), time: '10:00', phone: '0401 800 001' })) }).then(r => r.json());
+  const pend = (await tom.get('/api/bookings/pending')).body.bookings.find(b => b.ref === r1.ref);
+  const staffAdd = await tom.post('/api/bookings', { restaurantId: 2, date: H.dayIn(3), time: '11:00', party: 2, name: 'Phone', phone: '0411 800 002' });
+  assert.equal(staffAdd.status, 201);
+  const req = (c, id, body = {}) => fetch(`${base()}/api/bookings/${id}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json', Cookie: c.cookie }, body: JSON.stringify(body) });
+  assert.equal((await req(tom, staffAdd.body.booking.id)).status, 403, 'staff cannot delete a confirmed booking');
+  const mdPending = (await owner.get('/api/bookings/pending')).body.bookings.find(b => b.restaurantId === 1);
+  assert.equal((await req(tom, mdPending.id)).status, 404, 'staff cannot touch another restaurant');
+  assert.equal((await req(tom, pend.id, { reason: 'spam' })).status, 200);
+  assert.equal((await owner.get(`/api/bookings/${pend.id}`)).status, 404);
+  assert.equal((await H.db()('booking_events').where({ booking_id: pend.id })).length, 0);
+  assert.equal((await req(owner, staffAdd.body.booking.id)).status, 200, 'owner can delete a confirmed booking');
+  const log = (await owner.get('/api/admin/audit?filter=bookings')).body.entries.filter(e => e.action === 'booking_deleted');
+  assert.equal(log.length, 2);
+  assert.match(log[1].detail, new RegExp(r1.ref + '.*spam'));
+});
+
 test('restaurant alerts still go out through the restaurant mailbox when the system mailbox is missing', async () => {
   const config = require('../src/config');
   const saved = config.smtp.host;

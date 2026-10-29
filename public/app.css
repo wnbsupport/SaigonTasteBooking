@@ -161,3 +161,76 @@ a.copy{text-decoration:none}
 .print tfoot td{font-weight:700;border-top:2px solid #111;border-bottom:0}
 .print .noprint{margin-bottom:12px}
 @media print{.noprint{display:none!important} body{padding:0;background:#fff} @page{size:A4;margin:12mm} .print td,.print th{font-size:11.5px}}
+
+/* ===== icons, menu, phone layout ===== */
+.ic{flex:none;display:block}
+.tabs button .ic{display:none}
+.menu-btn{display:none;gap:4px;padding:6px 10px}
+.btn.pri.danger{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn.pri.danger:hover:not(:disabled){background:var(--bad);filter:brightness(1.08)}
+a.tel{display:inline-flex;align-items:center;gap:4px}
+.mseg,.fab{display:none}
+.fil-end{margin-left:auto}
+
+@media (max-width:760px){
+  .who{display:none}
+  .menu-btn{display:inline-flex}
+  .top .wrap{padding-block:8px}
+  /* bottom navigation bar */
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:0;
+    padding:4px max(4px,env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px));overflow:visible}
+  .tabs.one{display:none}
+  .tabs button{flex-direction:column;gap:2px;font-size:11px;padding:6px 2px;border-bottom:0;border-radius:10px;position:relative;min-height:52px;justify-content:center}
+  .tabs button .ic{display:block}
+  .tabs button[aria-current="true"]{background:var(--accent-soft);border-bottom:0}
+  .tabs .badge{position:absolute;top:2px;left:calc(50% + 6px)}
+  .app{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px));padding-top:12px;gap:12px}
+  .app.nonav{padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+  #toasts{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  /* bookings: one list at a time */
+  .mseg{display:grid;grid-template-columns:1fr 1fr;padding:3px;border-radius:10px}
+  .mseg button{font-size:14px;padding:9px 6px;border-radius:8px}
+  .grid-app[data-show="pending"]>.p-day,.grid-app[data-show="day"]>.p-pending{display:none}
+  .panel{padding:12px}
+  .hint{padding:10px 12px}
+  .hint .muted{display:none}
+  .datenav{flex:1 1 100%}
+  .datenav input{flex:1;min-width:0}
+  .filters select{flex:1 1 auto}
+  .fil-end{margin-left:0}
+  .btn.desk{display:none}
+  .fab{display:grid;place-items:center;position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:21;
+    width:56px;height:56px;border-radius:50%;border:0;background:var(--accent);color:var(--on-accent);box-shadow:0 6px 18px rgba(0,0,0,.28);cursor:pointer}
+  .app.nonav .fab{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+  .stats{gap:6px} .stat{padding:8px 10px} .stat b{font-size:19px}
+  /* booking cards: bigger touch targets */
+  .bk{grid-template-columns:52px minmax(0,1fr);gap:4px 10px}
+  .bk .t{font-size:16px}
+  .acts{gap:8px}
+  .acts .btn{min-height:42px;flex:1 1 auto;font-size:14px}
+  .acts .btn.ghost{flex:0 0 auto}
+  a.tel{font-size:14px;padding:4px 0}
+  /* sheets slide up from the bottom */
+  .scrim{place-items:end stretch;padding:0;overflow:hidden}
+  .sheet{max-width:none;margin:0;border-radius:16px 16px 0 0;max-height:92vh;max-height:92dvh;overflow-y:auto;padding:16px max(16px,env(safe-area-inset-left,0px)) calc(12px + env(safe-area-inset-bottom,0px));gap:12px}
+  .sheet>.row.end:last-child{position:sticky;bottom:calc(-12px - env(safe-area-inset-bottom,0px));background:var(--surface);padding-block:10px calc(10px + env(safe-area-inset-bottom,0px));margin-bottom:calc(-12px - env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+  .sheet .row.end .btn{min-height:44px;flex:1 1 auto}
+  .mailframe{height:320px}
+  input,select,textarea{font-size:16px;min-height:44px}
+  input[type=checkbox]{min-height:0;width:20px;height:20px}
+  /* settings */
+  .pills{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .pills::-webkit-scrollbar{display:none}
+  .pill{flex:none;padding:7px 12px;font-size:13px}
+  .savebar{position:sticky;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:5;background:var(--bg);padding-block:8px;margin-inline:-4px}
+  .savebar .btn{flex:1;min-height:46px}
+  .set-days{grid-template-columns:72px minmax(0,1fr)}
+  .tbl{border-radius:8px}
+}
+@media (prefers-reduced-motion:no-preference) and (max-width:760px){.sheet{animation:sheetup .2s ease-out}@keyframes sheetup{from{transform:translateY(24px);opacity:.6}}}
+@media (max-width:760px){
+  .alert{padding:10px 12px;align-items:center}
+  .alert .muted{display:none}
+  .grid-app>.p-pending>h2{display:none}
+  .hint b{font-size:13px}
+}

@@ -176,6 +176,26 @@ router.post('/', async (req, res) => {
   res.status(201).json({ booking: B.serialize(out.booking) });
 });
 
+/**
+ * Delete a booking for good (test or spam bookings). Owners: any booking. Staff: only bookings still pending.
+ * Its history and stored emails go too; the activity log keeps a line saying what was deleted.
+ */
+router.delete('/:id', async (req, res) => {
+  const k = db();
+  const b = await k('bookings').where({ id: Number(req.params.id) }).first();
+  if (!b || !req.user.restaurantIds.includes(b.restaurant_id)) return res.status(404).json({ error: 'not_found' });
+  if (req.user.role !== 'owner' && b.status !== 'pending') return res.status(403).json({ error: 'forbidden' });
+  const reason = R.clean(req.body && req.body.reason, 200);
+  await k.transaction(async trx => {
+    await trx('booking_events').where({ booking_id: b.id }).del();
+    await trx('emails').where({ booking_id: b.id }).del();
+    await trx('bookings').where({ id: b.id }).del();
+  });
+  const r = await store.getRestaurant(b.restaurant_id);
+  await store.audit(req, 'booking_deleted', `${b.name} · ${r ? r.name : ''} · ${b.ref} · ${b.date} ${R.hm(b.time_min)} · ${b.status}${reason ? ' · ' + reason : ''}`);
+  res.json({ ok: true });
+});
+
 router.post('/:id/:action', async (req, res) => {
   const action = req.params.action;
   if (!B.TRANSITIONS[action]) return res.status(404).json({ error: 'not_found' });
