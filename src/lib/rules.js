@@ -3,9 +3,12 @@
 // Every check here runs on the server for every request, whatever the form sent.
 const { DateTime } = require('luxon');
 
-const DEFAULT_RULES = { interval: 30, lastBefore: 60, lead: 120, maxDays: 60, maxParty: 10, cap: 0, remind: 30 };
+// cap = most guests in the restaurant at the same time (0 = no limit). stay / stayEvening = how long a table is
+// usually occupied for bookings before / from 17:00, used to count who is still seated at a given time.
+const DEFAULT_RULES = { interval: 30, lastBefore: 60, lead: 120, maxDays: 60, maxParty: 10, cap: 0, remind: 30, stay: 60, stayEvening: 90 };
+const EVENING = 17 * 60;
 const RULE_LIMITS = {
-  interval: [15, 30], lastBefore: [0, 180], lead: [0, 2880], maxDays: [1, 365], maxParty: [1, 50], cap: [0, 1000], remind: [0, 1440],
+  interval: [15, 30], lastBefore: [0, 180], lead: [0, 2880], maxDays: [1, 365], maxParty: [1, 50], cap: [0, 1000], remind: [0, 1440], stay: [15, 300], stayEvening: [15, 300],
 };
 const ACTIVE = ['pending', 'confirmed', 'seated'];
 const TIMEZONES = ['Australia/Melbourne', 'Australia/Sydney', 'Australia/Brisbane', 'Australia/Adelaide', 'Australia/Perth', 'Australia/Hobart', 'Australia/Darwin'];
@@ -76,15 +79,35 @@ function sessionsFor(restaurant, specials, date) {
   return { sessions: parseSessions(src) || [], special: sp || null };
 }
 
+/** How long a booking starting at minute m keeps its table. */
+const stayFor = (rules, m) => (m >= EVENING ? rules.stayEvening : rules.stay);
+
+/** Guests seated at minute p. booked: [{ min, party }] (active bookings that day). */
+function seatedAt(rules, booked, p) {
+  let n = 0;
+  for (const b of booked) if (b.min <= p && p < b.min + stayFor(rules, b.min)) n += b.party;
+  return n;
+}
+/** Most guests seated at any moment while a new booking at minute m would be at the table. */
+function peakDuring(rules, booked, m) {
+  const end = m + stayFor(rules, m);
+  let peak = seatedAt(rules, booked, m);
+  for (const b of booked) if (b.min > m && b.min < end) peak = Math.max(peak, seatedAt(rules, booked, b.min));
+  return peak;
+}
+/** Would `party` more guests at minute m go over the restaurant's limit? */
+const overCap = (rules, booked, m, party) => rules.cap > 0 && peakDuring(rules, booked, m) + party > rules.cap;
+
 const MEAL = m => (m < 11 * 60 ? 'breakfast' : m < 15 * 60 ? 'lunch' : m < 17 * 60 + 30 ? 'afternoon' : 'dinner');
 
 /**
  * Available times for a date.
- * covers: Map(time_min → guests already booked in that slot (active bookings)).
+ * booked: [{ min, party }] active bookings that day; a slot is full when the guests already seated during the
+ * new booking's stay plus this party would go over the limit.
  * Returns { state, note, groups:[{meal, slots:[{time, min, full}]}] }
  * state: ok | closed | none | past | toofar | paused
  */
-function slotsFor({ restaurant, specials, date, party = 1, covers = new Map(), now = Date.now() }) {
+function slotsFor({ restaurant, specials, date, party = 1, booked = [], now = Date.now() }) {
   const tz = restaurant.timezone, R = restaurant.rules;
   const t = today(tz, now);
   const dd = dayDiff(t, date);
@@ -97,8 +120,7 @@ function slotsFor({ restaurant, specials, date, party = 1, covers = new Map(), n
   for (const [open, close] of sc.sessions) {
     for (let m = open; m <= close - R.lastBefore; m += R.interval) {
       if (startsAt(tz, date, m) - now < R.lead * 60000) continue;
-      const used = covers.get(m) || 0;
-      const full = R.cap > 0 && used + party > R.cap;
+      const full = overCap(R, booked, m, party);
       const meal = MEAL(m);
       let g = groups[groups.length - 1];
       if (!g || g.meal !== meal) groups.push(g = { meal, slots: [] });
@@ -120,7 +142,7 @@ function firstOpenDate({ restaurant, specials, now = Date.now() }) {
 }
 
 module.exports = {
-  DEFAULT_RULES, RULE_LIMITS, ACTIVE, TIMEZONES, MEAL,
+  DEFAULT_RULES, RULE_LIMITS, ACTIVE, TIMEZONES, MEAL, stayFor, seatedAt, peakDuring, overCap,
   pad, hm, toMin, isDate, parseSessions, formatSessions, normalizeRules, normPhone, fmtPhone, emailOk, clean,
   startsAt, today, addDays, dayDiff, weekday, sessionsFor, slotsFor, firstOpenDate,
 };

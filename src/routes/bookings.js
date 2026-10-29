@@ -105,6 +105,36 @@ router.post('/printed', async (req, res) => {
   res.json({ ok: true });
 });
 
+/**
+ * Guests seated through the day, per restaurant (for the day view), or – with ?time=HH:MM&party=n –
+ * the busiest moment while a booking at that time would be at the table (for warnings before saving).
+ */
+router.get('/load', async (req, res) => {
+  const rids = scope(req);
+  const date = String(req.query.date || '');
+  if (!R.isDate(date)) return res.status(400).json({ error: 'date' });
+  const time = R.toMin(req.query.time);
+  const ignore = parseInt(req.query.ignore, 10) || null;
+  const out = [];
+  for (const id of rids) {
+    const r = await store.getRestaurant(id);
+    const booked = await store.bookedFor(id, date, ignore);
+    const base = { restaurantId: id, cap: r.rules.cap, stay: r.rules.stay, stayEvening: r.rules.stayEvening };
+    if (time != null) {
+      const party = Math.max(0, parseInt(req.query.party, 10) || 0);
+      out.push({ ...base, time: R.hm(time), stayHere: R.stayFor(r.rules, time), peak: R.peakDuring(r.rules, booked, time), party });
+      continue;
+    }
+    const { sessions } = R.sessionsFor(r, await store.specialsFor(id), date);
+    const slots = [];
+    for (const [open, close] of sessions) {
+      for (let m = open; m < close; m += r.rules.interval) slots.push({ time: R.hm(m), guests: R.seatedAt(r.rules, booked, m) });
+    }
+    out.push({ ...base, slots });
+  }
+  res.json({ date, restaurants: out });
+});
+
 router.get('/:id', async (req, res) => {
   const k = db();
   const b = await k('bookings').where({ id: Number(req.params.id) }).first();
@@ -133,7 +163,7 @@ router.post('/:id/preview', async (req, res) => {
   const own = mailer.restaurantReady(r) && r.mail_status !== 'failed';
   const sysFrom = require('../config').smtp.from;
   const addr = own ? r.smtp_user : sysFrom;
-  res.json({ to: b.email, from: `${r.mail_from_name || r.name}${addr ? ` <${addr}>` : ''}`, replyTo: r.email, subject: m.subject, html: m.html, ownMailbox: own });
+  res.json({ to: b.email, from: `${r.mail_from_name || r.name}${addr ? ` <${addr}>` : ''}`, replyTo: own ? '' : (mailer.restaurantReplyTo(r) || ''), subject: m.subject, html: m.html, ownMailbox: own });
 });
 
 router.post('/', async (req, res) => {

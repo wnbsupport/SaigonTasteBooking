@@ -19,13 +19,11 @@ async function getRestaurantBy(where, k = db()) { return parseRestaurant(await k
 async function listRestaurants(k = db()) { return (await k('restaurants').orderBy('id')).map(parseRestaurant); }
 async function specialsFor(restaurantId, k = db()) { return k('special_dates').where({ restaurant_id: restaurantId }).orderBy('date'); }
 
-/** Guests already booked per time slot on a date (active bookings only). */
-async function coversFor(restaurantId, date, ignoreId = null, k = db()) {
-  let q = k('bookings').where({ restaurant_id: restaurantId, date }).whereIn('status', ['pending', 'confirmed', 'seated'])
-    .select('time_min').sum({ guests: 'party' }).groupBy('time_min');
+/** Active bookings on a date as [{ min, party }] – pending ones hold their seats too. */
+async function bookedFor(restaurantId, date, ignoreId = null, k = db()) {
+  let q = k('bookings').where({ restaurant_id: restaurantId, date }).whereIn('status', ['pending', 'confirmed', 'seated']).select('id', 'time_min', 'party');
   if (ignoreId) q = q.whereNot({ id: ignoreId });
-  const rows = await q;
-  return new Map(rows.map(r => [Number(r.time_min), Number(r.guests) || 0]));
+  return (await q).map(r => ({ id: r.id, min: Number(r.time_min), party: Number(r.party) }));
 }
 
 const actorName = req => (req && req.user ? req.user.name : 'system');
@@ -61,4 +59,4 @@ async function restaurantIdsFor(user) {
   return (await db()('user_restaurants').where({ user_id: user.id }).select('restaurant_id')).map(r => r.restaurant_id);
 }
 
-module.exports = { now, parseRestaurant, getRestaurant, getRestaurantBy, listRestaurants, specialsFor, coversFor, audit, event, getSetting, setSetting, restaurantIdsFor, clientIp };
+module.exports = { now, parseRestaurant, getRestaurant, getRestaurantBy, listRestaurants, specialsFor, bookedFor, audit, event, getSetting, setSetting, restaurantIdsFor, clientIp };

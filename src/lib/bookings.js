@@ -74,13 +74,13 @@ async function createBooking({ restaurant, input, mode, user = null, override = 
       const fresh = store.parseRestaurant(await rq.first());
       if (!allowOverride) {
         const specials = await store.specialsFor(fresh.id, trx);
-        const covers = await store.coversFor(fresh.id, v.date, null, trx);
-        const sl = R.slotsFor({ restaurant: fresh, specials, date: v.date, party: v.party, covers, now: t });
+        const booked = await store.bookedFor(fresh.id, v.date, null, trx);
+        const sl = R.slotsFor({ restaurant: fresh, specials, date: v.date, party: v.party, booked, now: t });
         if (mode === 'public' && sl.state === 'paused') throw Object.assign(new Error('paused'), { errors: { time: 'paused' } });
         // Staff (phone bookings) may use any minute inside opening hours, even while online booking is paused,
         // and without the minimum notice. Guests can only pick the offered slots.
         const hit = mode === 'staff'
-          ? staffSlot(fresh, specials, v, covers, t)
+          ? staffSlot(fresh, specials, v, booked, t)
           : sl.groups.flatMap(g => g.slots).find(s => s.min === v.timeMin);
         if (!hit) throw Object.assign(new Error('time'), { errors: { time: 'outside' } });
         if (hit.full) throw Object.assign(new Error('full'), { errors: { time: 'full' } });
@@ -113,20 +113,19 @@ async function createBooking({ restaurant, input, mode, user = null, override = 
       }
     } else if (sendConfirm && b.email) {
       const m = tpl.bookingConfirmed(r, b);
-      await mailer.queue({ kind: 'confirm', sender: 'restaurant', restaurantId: r.id, bookingId: b.id, to: b.email, replyTo: r.email, subject: m.subject, html: m.html, text: m.text });
+      await mailer.queue({ kind: 'confirm', sender: 'restaurant', restaurantId: r.id, bookingId: b.id, to: b.email, subject: m.subject, html: m.html, text: m.text });
       await store.event(b.id, user.name, 'email_confirm', b.email);
     }
   } catch (err) { log.error('Queue email after booking', err); }
   return { booking: b, restaurant: r };
 }
 
-function staffSlot(r, specials, v, covers, now) {
+function staffSlot(r, specials, v, booked, now) {
   const sc = R.sessionsFor(r, specials, v.date);
   const inside = sc.sessions.some(([a, b]) => v.timeMin >= a && v.timeMin <= b - Math.min(r.rules.lastBefore, b - a));
   if (!inside) return null;
   if (R.startsAt(r.timezone, v.date, v.timeMin) < now - 15 * 60000) return null; // not in the past
-  const used = covers.get(v.timeMin) || 0;
-  return { min: v.timeMin, full: r.rules.cap > 0 && used + v.party > r.rules.cap };
+  return { min: v.timeMin, full: R.overCap(r.rules, booked, v.timeMin, v.party) };
 }
 
 const TRANSITIONS = {
@@ -158,7 +157,7 @@ async function transition(id, action, user, { reason = '' } = {}) {
   const r = await store.getRestaurant(b.restaurant_id);
   if ((action === 'confirm' || action === 'decline') && nb.email) {
     const m = action === 'confirm' ? tpl.bookingConfirmed(r, nb) : tpl.bookingDeclined(r, nb);
-    await mailer.queue({ kind: action, sender: 'restaurant', restaurantId: r.id, bookingId: id, to: nb.email, replyTo: r.email, subject: m.subject, html: m.html, text: m.text });
+    await mailer.queue({ kind: action, sender: 'restaurant', restaurantId: r.id, bookingId: id, to: nb.email, subject: m.subject, html: m.html, text: m.text });
     await store.event(id, user.name, 'email_' + action, nb.email);
   }
   return { booking: serialize(nb), restaurant: r };

@@ -109,6 +109,7 @@ test('confirm sends the guest email from the restaurant mailbox, with fallback t
   assert.equal(m.host, 'mail.mandoline.test');
   assert.equal(m.from, '"Mandoline" <bookings@mandolinerestaurant.com.au>');
   assert.equal(m.to, 'g1@example.com');
+  assert.equal(m.replyTo, undefined, 'sent from the restaurant mailbox: replies go straight back to it');
   assert.match(m.subject, /^Booking confirmed – Mandoline/);
   assert.equal((await owner.post(`/api/bookings/${id}/confirm`)).status, 409, 'cannot confirm twice');
 
@@ -249,6 +250,23 @@ test('jobs: reminders after the set wait, and unanswered requests expire', async
   await k('bookings').where({ ref: r.body.ref }).update({ starts_at: Date.now() - 60000 });
   await jobs.expirePending();
   assert.equal((await k('bookings').where({ ref: r.body.ref }).first()).status, 'expired');
+});
+
+test('staff cannot squeeze a booking in at an off-grid time while guests are still seated', async () => {
+  await owner.put('/api/restaurants/1', { rules: { cap: 10, stay: 90 } });
+  const date = H.dayIn(8);
+  assert.equal((await owner.post('/api/bookings', { restaurantId: 1, date, time: '12:00', party: 8, name: 'Big Table', phone: '0411 700 001' })).status, 201);
+  const r = await owner.post('/api/bookings', { restaurantId: 1, date, time: '12:40', party: 4, name: 'Squeeze', phone: '0411 700 002' });
+  assert.equal(r.status, 422); assert.equal(r.body.errors.time, 'full');
+  assert.equal((await owner.post('/api/bookings', { restaurantId: 1, date, time: '13:30', party: 4, name: 'After', phone: '0411 700 003' })).status, 201);
+  const load = await owner.get(`/api/bookings/load?restaurant=1&date=${date}&time=12:40&party=4`);
+  assert.equal(load.body.restaurants[0].peak, 8, 'the 12:00 group leaves at 13:30 as the 13:30 group arrives');
+  const day = await owner.get(`/api/bookings/load?restaurant=1&date=${date}`);
+  const at = Object.fromEntries(day.body.restaurants[0].slots.map(x => [x.time, x.guests]));
+  assert.equal(at['12:00'], 8); assert.equal(at['13:00'], 8); assert.equal(at['13:30'], 4);
+  const guestR = await book(guestBody({ date, time: '12:30', party: 3, phone: '0401 700 004' }));
+  assert.equal(guestR.status, 422); assert.equal(guestR.body.errors.time, 'full');
+  await owner.put('/api/restaurants/1', { rules: { cap: 40 } });
 });
 
 test('restaurant settings validate hours and special dates; new restaurant gets a key', async () => {

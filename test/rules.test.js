@@ -54,13 +54,22 @@ test('closed days, special dates, paused, past and too far', () => {
   assert.equal(R.slotsFor({ restaurant: r, specials: [], date: '2026-12-20', now }).state, 'toofar');
 });
 
-test('capacity marks a slot full for the party size', () => {
-  const covers = new Map([[R.toMin('12:00'), 8]]);
-  const s = R.slotsFor({ restaurant: base, specials: [], date: '2026-11-10', party: 3, covers, now: at('2026-11-09', '12:00') });
-  const slot = s.groups.flatMap(g => g.slots).find(x => x.time === '12:00');
-  assert.equal(slot.full, true);
-  const s2 = R.slotsFor({ restaurant: base, specials: [], date: '2026-11-10', party: 2, covers, now: at('2026-11-09', '12:00') });
-  assert.equal(s2.groups.flatMap(g => g.slots).find(x => x.time === '12:00').full, false);
+test('capacity counts guests still seated from earlier bookings', () => {
+  const r = { ...base, rules: R.normalizeRules({ ...base.rules, cap: 10, stay: 90, stayEvening: 120 }) };
+  const booked = [{ min: R.toMin('12:00'), party: 8 }];
+  const s = R.slotsFor({ restaurant: r, specials: [], date: '2026-11-10', party: 3, booked, now: at('2026-11-09', '12:00') });
+  const full = Object.fromEntries(s.groups.flatMap(g => g.slots).map(x => [x.time, x.full]));
+  assert.equal(full['12:00'], true);
+  assert.equal(full['12:30'], true, '12:00 guests still seated at 12:30');
+  assert.equal(full['13:00'], true, 'still seated at 13:00 (90 min stay)');
+  assert.equal(full['13:30'], false, 'table free again at 13:30');
+  assert.equal(full['11:00'], true, 'an 11:00 booking would still be seated when the 12:00 group arrives');
+  assert.equal(full['10:30'], false, '10:30 + 90 min ends exactly at 12:00');
+  const s2 = R.slotsFor({ restaurant: r, specials: [], date: '2026-11-10', party: 2, booked, now: at('2026-11-09', '12:00') });
+  assert.equal(s2.groups.flatMap(g => g.slots).find(x => x.time === '12:30').full, false, '8 + 2 fits a cap of 10');
+  // evening bookings use the evening stay
+  assert.equal(R.stayFor(r.rules, R.toMin('18:00')), 120);
+  assert.equal(R.peakDuring(r.rules, [{ min: R.toMin('18:00'), party: 6 }, { min: R.toMin('19:30'), party: 4 }], R.toMin('19:00')), 10);
 });
 
 test('start times follow the restaurant time zone across daylight saving', () => {

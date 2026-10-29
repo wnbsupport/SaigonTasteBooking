@@ -23,7 +23,9 @@ Hệ thống đặt bàn trung tâm cho các nhà hàng Saigon Taste (hiện có
 
 ## Quy tắc đặt bàn
 
-- Mỗi quán có giờ nhận đặt bàn theo tuần (nhiều ca mỗi ngày), ngày đặc biệt (nghỉ lễ hoặc giờ khác), bước khung giờ 15/30 phút, nhận khách cuối trước giờ đóng, đặt trước tối thiểu, đặt xa tối đa, số khách tối đa mỗi booking, tổng khách mỗi khung giờ.
+- Mỗi quán có giờ nhận đặt bàn theo tuần (nhiều ca mỗi ngày), ngày đặc biệt (nghỉ lễ hoặc giờ khác), bước khung giờ 15/30 phút, nhận khách cuối trước giờ đóng, đặt trước tối thiểu, đặt xa tối đa, số khách tối đa mỗi booking.
+- **Sức chứa theo thời gian ngồi:** mỗi quán đặt số khách tối đa trong quán cùng lúc và thời gian khách ngồi trung bình (trước 17:00 mặc định 60 phút, từ 17:00 mặc định 90 phút). Một booking giữ chỗ suốt thời gian ngồi, nên khung 12:30 vẫn tính khách đặt 12:00. Booking đang chờ xác nhận cũng giữ chỗ. Nhân viên nhập giờ lẻ (ví dụ 12:10) cũng bị kiểm tra như vậy.
+- Cùng một SĐT không đặt được 2 booking (đang chờ hoặc đã xác nhận) trong cùng ngày tại cùng quán.
 - Giờ tính theo **múi giờ của quán** (đúng cả khi đổi giờ mùa hè ở Melbourne/Sydney).
 - Khách gửi yêu cầu, booking ở trạng thái **Chờ xác nhận** và quán nhận email báo. Nhân viên bấm **Xác nhận** thì khách nhận email xác nhận; **Từ chối** thì khách nhận email kèm lý do.
 - Chờ quá thời gian cài đặt (mặc định 30 phút) thì quán nhận email nhắc. Booking chờ mà đã qua giờ hẹn tự chuyển **Hết hạn**.
@@ -32,8 +34,8 @@ Hệ thống đặt bàn trung tâm cho các nhà hàng Saigon Taste (hiện có
 ## Email
 
 - Mỗi quán cài **hộp mail SiteGround của quán** trong app (Cài đặt quán → Email gửi khách). Mật khẩu được mã hóa bằng `ENCRYPTION_KEY`.
-- Khách thấy tên và địa chỉ của quán; khách trả lời thì thư về email quán.
-- Hộp mail của quán chưa cài hoặc bị lỗi thì **hộp mail hệ thống** (biến `SMTP_*`) gửi thay, vẫn hiện tên quán. App báo lỗi để chủ sửa.
+- Khách thấy tên và địa chỉ của quán; khách trả lời thì thư về đúng hộp mail gửi đi đó (không đặt Reply-To).
+- Hộp mail của quán chưa cài hoặc bị lỗi thì **hộp mail hệ thống** (biến `SMTP_*`) gửi thay, vẫn hiện tên quán, kèm Reply-To là hộp mail gửi đi của quán để thư trả lời vẫn về quán. App báo lỗi để chủ sửa.
 - Mọi email được lưu vào database trước khi gửi; gửi lỗi thì tự thử lại tối đa 5 lần.
 
 ## Bảo mật

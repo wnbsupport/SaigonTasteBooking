@@ -58,8 +58,8 @@ async function availability(req, res) {
   if (!R.isDate(date)) return res.status(400).json({ error: 'date' });
   const party = Math.max(1, Math.min(r.rules.maxParty, parseInt(req.body.party, 10) || 1));
   const specials = await store.specialsFor(r.id);
-  const covers = await store.coversFor(r.id, date);
-  const sl = R.slotsFor({ restaurant: r, specials, date, party, covers });
+  const booked = await store.bookedFor(r.id, date);
+  const sl = R.slotsFor({ restaurant: r, specials, date, party, booked });
   res.set('Cache-Control', 'no-store').json({ date, party, state: sl.state, note: sl.note || '', groups: sl.groups.map(g => ({ meal: g.meal, slots: g.slots.map(s => ({ time: s.time, full: s.full })) })) });
 }
 

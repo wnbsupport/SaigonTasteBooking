@@ -108,7 +108,8 @@ App đã tạo sẵn **Mandoline** và **Touchstone Cafe** theo thông tin trên
 
 - **Giờ nhận đặt bàn hàng tuần**: giờ khách được đặt, không phải giờ mở cửa. Ví dụ Mandoline đang để `08:00-17:00` mỗi ngày, thêm ca tối `18:00-21:00` từ Thứ 4 đến Thứ 7.
 - **Ngày đặc biệt**: Christmas, Boxing Day, các ngày nghỉ khác.
-- **Quy tắc**: đặt trước tối thiểu, số khách tối đa, tổng khách mỗi khung giờ, thời gian nhắc.
+- **Quy tắc**: đặt trước tối thiểu, số khách tối đa mỗi booking, thời gian nhắc.
+- **Sức chứa**: "Tối đa khách trong quán cùng lúc" (số ghế thực tế muốn nhận qua booking) và "Khách ngồi trung bình" (trước 17:00 và từ 17:00). Ví dụ Touchstone ngồi khoảng 60 phút, Mandoline buổi tối khoảng 90 phút.
 - **Email quán**: email nhận báo booking mới và nhận thư khách trả lời.
 - **Link chính sách bảo mật**: link trang Privacy Policy của website quán (theo Privacy Act Úc).
 
@@ -124,7 +125,7 @@ Làm cho **từng quán** (Mandoline, Touchstone Cafe):
    - Touchstone: tạo trên tên miền có mục Email trong Site Tools (`touchstonecafe.com.au` hoặc `touchstonecafe.au`).
 2. **⋮ → Mail Configuration → Manual Settings**: ghi lại **Outgoing server (SMTP)**.
 3. **Email → Authentication**: kiểm tra DKIM và SPF đang bật.
-4. Trong app, vào **Cài đặt quán → Email gửi khách** và nhập:
+4. Trong app, vào **Cài đặt quán → Email gửi khách** và nhập (khách trả lời email xác nhận thì thư về chính hộp mail này, nên chọn hộp mail có người đọc):
    - Tên người gửi khách thấy: `Mandoline`
    - Máy chủ SMTP: ở mục 2
    - Cổng: `465`
@@ -179,7 +180,8 @@ Làm cho từng website (mandolinerestaurant.com.au, touchstonecafe.au):
 
 - [ ] Đặt thử trên website Mandoline. Quán nhận email "New booking request", app hiện booking mới và có chuông.
 - [ ] Chọn một ngày quán nghỉ: form báo đóng cửa, không cho chọn giờ.
-- [ ] Trong app bấm **Xác nhận**: khách nhận email từ `bookings@mandolinerestaurant.com.au`. Trả lời email đó thì thư về email quán.
+- [ ] Trong app bấm **Xác nhận**: khách nhận email từ `bookings@mandolinerestaurant.com.au`. Trả lời email đó thì thư về hộp mail `bookings@` này.
+- [ ] Thêm vài booking cùng giờ cho tới khi đầy: form website gạch các giờ bị trùng, kể cả khung liền kề trong thời gian khách ngồi.
 - [ ] Đặt thử và **Từ chối** kèm lý do: khách nhận email có lý do.
 - [ ] Làm lại 3 mục trên với Touchstone Cafe.
 - [ ] Đăng nhập tài khoản nhân viên: chỉ thấy quán của mình.

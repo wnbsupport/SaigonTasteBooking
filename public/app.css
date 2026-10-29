@@ -107,6 +107,13 @@ a.copy{text-decoration:none}
 .hint{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}
 .offline{background:var(--warn-soft);color:var(--warn);font-weight:600;font-size:13px;padding:8px 12px;border-radius:8px}
 
+/* guests in the restaurant by time */
+.load{display:flex;flex-direction:column;gap:6px}
+.loadrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.loadslots{display:flex;gap:4px;overflow-x:auto;scrollbar-width:thin;min-width:0;max-width:100%;padding-bottom:2px}
+.ls{flex:none;font-size:12px;background:var(--sunk);border-radius:6px;padding:2px 7px;white-space:nowrap}
+.ls.high{background:var(--warn-soft);color:var(--warn)} .ls.over{background:var(--bad-soft);color:var(--bad);font-weight:700}
+
 /* settings */
 .set-days{display:grid;grid-template-columns:64px minmax(0,1fr);gap:8px 10px;align-items:center}
 .set-days>span{font-weight:700;font-size:13px}

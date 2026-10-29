@@ -1,7 +1,8 @@
 'use strict';
-// Sends email. Guest emails go out from the restaurant's own SiteGround mailbox;
-// if that mailbox is not set up or fails, the system mailbox (env SMTP_*) sends instead,
-// still showing the restaurant's name and with replies going to the restaurant.
+// Sends email. Guest emails go out from the restaurant's own SiteGround mailbox, so a guest's reply
+// lands in that same mailbox (no Reply-To needed). If that mailbox is not set up or fails, the system
+// mailbox (env SMTP_*) sends instead, showing the restaurant's name, with Reply-To set to the restaurant's
+// sending mailbox so replies still reach the restaurant.
 // Every email is stored in the `emails` table first, so nothing is lost if sending fails; a job retries.
 const nodemailer = require('nodemailer');
 const config = require('../config');
@@ -26,6 +27,8 @@ function transportFor(host, port, user, pass) {
 }
 const systemReady = () => !!(config.smtp.host && config.smtp.user && config.smtp.pass);
 const restaurantReady = r => !!(r && r.smtp_host && r.smtp_user && r.smtp_pass_enc);
+/** Where guest replies go when the system mailbox sends for a restaurant: its own sending mailbox, else its contact email. */
+const restaurantReplyTo = r => (r.smtp_user || r.email || undefined);
 const quote = s => `"${String(s || '').replace(/["\\\r\n]/g, '')}"`;
 
 /** Store an email and send it in the background. sender: 'restaurant' | 'system' */
@@ -54,9 +57,8 @@ async function deliver(id) {
     if (way === 'restaurant' && restaurantReady(r)) {
       try {
         const from = `${quote(r.mail_from_name || r.name)} <${r.smtp_user}>`;
-        const replyTo = row.via === 'restaurant' ? (row.reply_to || undefined) : undefined;
-        await transportFor(r.smtp_host, r.smtp_port, r.smtp_user, decrypt(r.smtp_pass_enc)).sendMail({ ...msg, from, replyTo });
-        await k('emails').where({ id }).update({ status: 'sent', via: row.via === 'restaurant' ? 'restaurant' : 'restaurant_fb', from_addr: from.slice(0, 255), error: lastErr.slice(0, 255), attempts, sent_at: Date.now() });
+        await transportFor(r.smtp_host, r.smtp_port, r.smtp_user, decrypt(r.smtp_pass_enc)).sendMail({ ...msg, from });
+        await k('emails').where({ id }).update({ reply_to: '', status: 'sent', via: row.via === 'restaurant' ? 'restaurant' : 'restaurant_fb', from_addr: from.slice(0, 255), error: lastErr.slice(0, 255), attempts, sent_at: Date.now() });
         if (r.mail_status !== 'ok') await k('restaurants').where({ id: r.id }).update({ mail_status: 'ok', mail_error: '', mail_checked_at: Date.now() });
         return;
       } catch (e) {
@@ -69,9 +71,9 @@ async function deliver(id) {
       try {
         const name = row.via === 'restaurant' && r ? (r.mail_from_name || r.name) : config.smtp.fromName;
         const from = `${quote(name)} <${config.smtp.from}>`;
-        const replyTo = row.reply_to || (row.via === 'restaurant' && r ? r.email : undefined);
+        const replyTo = row.via === 'restaurant' && r ? restaurantReplyTo(r) : (row.reply_to || undefined);
         await transportFor(config.smtp.host, config.smtp.port, config.smtp.user, config.smtp.pass).sendMail({ ...msg, from, replyTo });
-        await k('emails').where({ id }).update({ status: 'sent', via: row.via === 'restaurant' ? 'fallback' : 'system', from_addr: from.slice(0, 255), error: lastErr.slice(0, 255), attempts, sent_at: Date.now() });
+        await k('emails').where({ id }).update({ reply_to: String(replyTo || '').slice(0, 190), status: 'sent', via: row.via === 'restaurant' ? 'fallback' : 'system', from_addr: from.slice(0, 255), error: lastErr.slice(0, 255), attempts, sent_at: Date.now() });
         return;
       } catch (e) {
         lastErr = (lastErr ? lastErr + ' · ' : '') + 'Hộp mail hệ thống: ' + friendly(e);
@@ -122,7 +124,7 @@ async function retryPending() {
 }
 
 module.exports = {
-  queue, deliver, testRestaurant, retryPending, systemReady, restaurantReady, friendly,
+  queue, deliver, testRestaurant, restaurantReplyTo, retryPending, systemReady, restaurantReady, friendly,
   setFactory(f) { factory = f; transports.clear(); },
   sync: false,
 };

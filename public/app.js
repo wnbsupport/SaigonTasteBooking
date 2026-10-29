@@ -38,11 +38,12 @@ const DICT = {
     addTitle: 'Thêm booking (khách gọi điện, nhắn tin…)', restaurant: 'Quán', guestsLbl: 'Số khách', date: 'Ngày', time: 'Giờ ({c})', phone: 'SĐT', guestName: 'Tên khách', guestEmail: 'Email khách (không bắt buộc)', reqLbl: 'Yêu cầu', override: 'Cho phép ngoài giờ / vượt sức chứa (chỉ chủ)', sendConfirm: 'Gửi email xác nhận cho khách (nếu có email)', saveConfirmed: 'Lưu booking đã xác nhận', added: 'Đã thêm booking',
     guestKnown: 'Khách này đã đặt {n} lần: {s} lần đến, {x} lần không đến.',
     e_required: 'Bắt buộc.', e_invalid: 'Không hợp lệ.', e_phone: 'SĐT Úc không hợp lệ.', e_email: 'Email không hợp lệ.', e_party: 'Số khách không hợp lệ.', e_name: 'Nhập tên khách.', e_time_outside: 'Giờ này ngoài giờ mở cửa của quán (hoặc đã qua).', e_time_full: 'Khung giờ này đã đủ khách.', e_time_required: 'Chọn ngày và giờ.', e_dup: 'Khách này đã có booking trong ngày tại quán (mã {r}).',
+    loadTitle: 'Khách trong quán theo giờ', loadNow: 'Lúc {a}–{b}: tối đa {n}{c} khách trong quán (đã tính booking này).', loadOver: 'Vượt sức chứa: lúc {a}–{b} có tối đa {n}/{c} khách.', loadAdd: 'Lúc {a}–{b}: đang có tối đa {n}{c} khách, thêm booking này thành {m}{c}.', loadAddOver: 'Thêm booking này sẽ vượt sức chứa ({m}/{c} khách lúc {a}–{b}).', loadNeedOverride: ' Tick “Cho phép … vượt sức chứa” nếu vẫn muốn nhận.', loadStaffOver: ' Hệ thống sẽ không cho lưu, chọn giờ khác hoặc báo chủ.',
     printTitle: 'Danh sách khách', printBtn: 'In', csv: 'Tải CSV', notConfirmed: 'chưa xác nhận', total: 'Tổng', venue: 'Quán', pax: 'Số', guest: 'Khách',
     serverErr: 'Có lỗi máy chủ. Thử lại sau ít phút.', netErr: 'Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.', saved: 'Đã lưu',
     // restaurants
     addRest: '+ Thêm quán', paused: ' · tạm ngừng', details_: 'Thông tin quán', online: 'Đang nhận đặt bàn online', name: 'Tên quán', website: 'Website (để trống nếu chưa có)', labelColor: 'Màu nhãn trong app', tz: 'Múi giờ', restPhone: 'SĐT quán', restEmail: 'Email quán (nhận báo booking mới, nhận thư khách trả lời)', address: 'Địa chỉ (in trong email)', extraNote: 'Lời nhắn thêm trong email xác nhận (tiếng Anh)', privacy: 'Link chính sách bảo mật (https://…)',
-    rules: 'Quy tắc đặt bàn', r_interval: 'Bước khung giờ', r_lastBefore: 'Nhận khách cuối, trước giờ đóng', r_lead: 'Phải đặt trước ít nhất', r_maxDays: 'Cho đặt xa tối đa (ngày)', r_maxParty: 'Số khách tối đa / booking online', r_cap: 'Tổng khách tối đa / khung giờ (0 = không giới hạn)', r_remind: 'Email nhắc quán nếu chưa xác nhận sau', expireNote: 'Booking chưa xác nhận mà đã qua giờ hẹn sẽ tự chuyển sang “Hết hạn”.', off: 'Không', min: ' phút', hr: ' giờ', day1: '1 ngày',
+    rules: 'Quy tắc đặt bàn', r_interval: 'Bước khung giờ', r_lastBefore: 'Nhận khách cuối, trước giờ đóng', r_lead: 'Phải đặt trước ít nhất', r_maxDays: 'Cho đặt xa tối đa (ngày)', r_maxParty: 'Số khách tối đa / booking online', r_cap: 'Tối đa khách trong quán cùng lúc (0 = không giới hạn)', r_stay: 'Khách ngồi trung bình (booking trước 17:00)', r_stayEvening: 'Khách ngồi trung bình (booking từ 17:00)', capNote: 'Khách đang chờ xác nhận cũng được giữ chỗ. Một booking chiếm chỗ trong suốt thời gian ngồi, nên các khung giờ liền nhau được tính chung.', r_remind: 'Email nhắc quán nếu chưa xác nhận sau', expireNote: 'Booking chưa xác nhận mà đã qua giờ hẹn sẽ tự chuyển sang “Hết hạn”.', off: 'Không', min: ' phút', hr: ' giờ', day1: '1 ngày',
     mailTitle: 'Email gửi khách (hộp mail SiteGround của quán)', mailHelp: 'Tạo hộp mail trong Site Tools của website quán (Email → Accounts), ví dụ bookings@tenquan.com.au. Máy chủ SMTP xem ở Mail Configuration → Manual Settings, cổng 465.', fromName: 'Tên người gửi khách thấy', smtpHost: 'Máy chủ SMTP', smtpPort: 'Cổng', smtpUser: 'Email gửi đi (tên đăng nhập)', smtpPass: 'Mật khẩu hộp mail', passSet: 'Đã lưu mật khẩu. Để trống nếu không đổi.', clearPass: 'Xóa mật khẩu đã lưu', testTo: 'Gửi thử tới', sendTest: 'Gửi thử', testOk: 'Đã gửi thử thành công. Kiểm tra hộp thư {e}.', testFail: 'Gửi thử lỗi: {e}', saveFirst: 'Lưu thay đổi trước khi gửi thử.',
     mail_ok: 'Hộp mail quán đang hoạt động', mail_failed: 'Hộp mail quán đang lỗi: {e}. Email tạm gửi bằng hộp mail hệ thống.', mail_none: 'Chưa cài hộp mail quán. Email tạm gửi bằng hộp mail hệ thống.', noEncKey: 'Server chưa có ENCRYPTION_KEY nên chưa lưu được mật khẩu email. Thêm biến này trong SiteGround rồi deploy lại.',
     connTitle: 'Kết nối website', connWp: 'Trên WordPress của {d}: cài plugin Saigon Taste Booking, vào Cài đặt → Saigon Taste Booking, dán địa chỉ app và khóa kết nối, rồi thêm shortcode [saigontaste_booking] vào trang đặt bàn.', connNoSite: 'Quán chưa có website: dùng trang đặt bàn riêng dưới đây (gắn vào Google Maps, Instagram, Facebook).', hostedPage: 'Trang đặt bàn riêng', appAddr: 'Địa chỉ app', keyNow: 'Khóa kết nối', newKey: 'Tạo khóa mới', newKeyQ: 'Tạo khóa kết nối mới?', newKeyText: 'Khóa cũ ngừng hoạt động ngay. Form trên website sẽ báo lỗi cho tới khi bạn dán khóa mới vào plugin.', create: 'Tạo', keyOnce: 'Copy khóa và dán vào plugin ngay. Khóa chỉ hiện đầy đủ một lần này.', copy: 'Copy', copied: 'Đã copy', done: 'Xong',
@@ -93,10 +94,11 @@ const DICT = {
     addTitle: 'Add booking (phone, message…)', restaurant: 'Restaurant', guestsLbl: 'Guests', date: 'Date', time: 'Time ({c})', phone: 'Phone', guestName: 'Guest name', guestEmail: 'Guest email (optional)', reqLbl: 'Requests', override: 'Allow outside hours / over capacity (owner only)', sendConfirm: 'Email a confirmation to the guest (if email given)', saveConfirmed: 'Save as confirmed', added: 'Booking added',
     guestKnown: 'This guest has booked {n} time(s): {s} visit(s), {x} no-show(s).',
     e_required: 'Required.', e_invalid: 'Not valid.', e_phone: 'Not a valid Australian number.', e_email: 'Not a valid email.', e_party: 'Invalid number of guests.', e_name: 'Enter the guest name.', e_time_outside: 'That time is outside opening hours (or already passed).', e_time_full: 'That time slot is full.', e_time_required: 'Choose a date and time.', e_dup: 'This guest already has a booking that day (ref {r}).',
+    loadTitle: 'Guests in the restaurant by time', loadNow: '{a}–{b}: at most {n}{c} guests in the restaurant (this booking included).', loadOver: 'Over capacity: up to {n}/{c} guests at {a}–{b}.', loadAdd: '{a}–{b}: up to {n}{c} guests now, {m}{c} with this booking.', loadAddOver: 'This booking would go over capacity ({m}/{c} guests at {a}–{b}).', loadNeedOverride: ' Tick “Allow … over capacity” to take it anyway.', loadStaffOver: ' It cannot be saved; choose another time or ask the owner.',
     printTitle: 'Guest list', printBtn: 'Print', csv: 'Download CSV', notConfirmed: 'not confirmed', total: 'Total', venue: 'Venue', pax: 'Pax', guest: 'Guest',
     serverErr: 'Server error. Please try again shortly.', netErr: 'Can\'t reach the server. Check the connection and try again.', saved: 'Saved',
     addRest: '+ Add restaurant', paused: ' · paused', details_: 'Restaurant details', online: 'Taking online bookings', name: 'Name', website: 'Website (blank if none)', labelColor: 'Label colour', tz: 'Time zone', restPhone: 'Phone', restEmail: 'Restaurant email (new-booking alerts and guest replies)', address: 'Address (shown in emails)', extraNote: 'Extra note in the confirmation email', privacy: 'Privacy policy link (https://…)',
-    rules: 'Booking rules', r_interval: 'Time slot step', r_lastBefore: 'Last booking before closing', r_lead: 'Minimum notice', r_maxDays: 'Book up to (days ahead)', r_maxParty: 'Max guests per online booking', r_cap: 'Max guests per time slot (0 = no limit)', r_remind: 'Remind the restaurant if unconfirmed after', expireNote: 'Unconfirmed bookings whose time has passed become “Expired” automatically.', off: 'Off', min: ' min', hr: ' h', day1: '1 day',
+    rules: 'Booking rules', r_interval: 'Time slot step', r_lastBefore: 'Last booking before closing', r_lead: 'Minimum notice', r_maxDays: 'Book up to (days ahead)', r_maxParty: 'Max guests per online booking', r_cap: 'Max guests in the restaurant at once (0 = no limit)', r_stay: 'Average stay (bookings before 5 pm)', r_stayEvening: 'Average stay (bookings from 5 pm)', capNote: 'Pending bookings hold their seats too. A booking takes seats for its whole stay, so neighbouring times are counted together.', r_remind: 'Remind the restaurant if unconfirmed after', expireNote: 'Unconfirmed bookings whose time has passed become “Expired” automatically.', off: 'Off', min: ' min', hr: ' h', day1: '1 day',
     mailTitle: 'Guest email (restaurant SiteGround mailbox)', mailHelp: 'Create a mailbox in the restaurant website\'s Site Tools (Email → Accounts), e.g. bookings@restaurant.com.au. The SMTP server is under Mail Configuration → Manual Settings, port 465.', fromName: 'Sender name guests see', smtpHost: 'SMTP server', smtpPort: 'Port', smtpUser: 'Sending email (username)', smtpPass: 'Mailbox password', passSet: 'Password saved. Leave blank to keep it.', clearPass: 'Remove saved password', testTo: 'Send test to', sendTest: 'Send test', testOk: 'Test sent. Check the inbox of {e}.', testFail: 'Test failed: {e}', saveFirst: 'Save your changes before sending a test.',
     mail_ok: 'Restaurant mailbox is working', mail_failed: 'Restaurant mailbox is failing: {e}. The system mailbox sends in the meantime.', mail_none: 'No restaurant mailbox yet. The system mailbox sends in the meantime.', noEncKey: 'The server has no ENCRYPTION_KEY, so mailbox passwords cannot be saved. Add it in SiteGround and redeploy.',
     connTitle: 'Website connection', connWp: 'On {d}\'s WordPress: install the Saigon Taste Booking plugin, open Settings → Saigon Taste Booking, paste the app address and the connection key, then add the shortcode [saigontaste_booking] to the booking page.', connNoSite: 'No website: use the hosted booking page below (link it from Google Maps, Instagram, Facebook).', hostedPage: 'Hosted booking page', appAddr: 'App address', keyNow: 'Connection key', newKey: 'New key', newKeyQ: 'Create a new connection key?', newKeyText: 'The old key stops working immediately. The website form fails until you paste the new key into the plugin.', create: 'Create', keyOnce: 'Copy the key into the plugin now. The full key is shown only once.', copy: 'Copy', copied: 'Copied', done: 'Done',
@@ -378,8 +380,8 @@ function card(b, showDate) {
 async function listView() {
   const pane = $('#pane'); if (!pane) return;
   const q = `restaurant=${S.rid}`;
-  let pend, day, sum;
-  try { [pend, day, sum] = await Promise.all([api('GET', `/api/bookings/pending?${q}`), api('GET', `/api/bookings?date=${S.date}&${q}`), api('GET', '/api/bookings/summary', undefined, { background: true })]); } catch { return; }
+  let pend, day, sum, load;
+  try { [pend, day, sum, load] = await Promise.all([api('GET', `/api/bookings/pending?${q}`), api('GET', `/api/bookings?date=${S.date}&${q}`), api('GET', '/api/bookings/summary', undefined, { background: true }), api('GET', `/api/bookings/load?date=${S.date}&${q}`)]); } catch { return; }
   S.pending = pend.bookings; S.day = day.bookings; applySummary(sum);
   if (S.tab !== 'list' || !$('#pane')) return;
   const tz = rest(S.rid === 'all' ? (S.restaurants[0] || {}).id : +S.rid).timezone, today = todayIn(tz);
@@ -403,6 +405,7 @@ async function listView() {
         </div>
         <h2 style="font-size:15px">${dayFull(S.date)}${S.date === today ? t('todaySuffix') : ''}</h2>
         <div class="stats"><div class="stat"><b>${live.length}</b><span>${t('bookingsN')}</span></div><div class="stat"><b>${guests}</b><span>${t('guestsExp')}</span></div><div class="stat"><b>${counts.pending || 0}</b><span>${t('pendingN')}</span></div></div>
+        ${loadHtml(load)}
         <div class="pills">${[['all', S.day.length], ...['pending', 'confirmed', 'seated', 'noshow', 'declined', 'cancelled', 'expired'].map(k => [k, counts[k] || 0])].filter(x => x[0] === 'all' || x[1]).map(([k, n]) => `<button class="pill" data-st="${k}" aria-pressed="${S.status === k}">${k === 'all' ? t('all') : t('st_' + k)} ${n}</button>`).join('')}</div>
         ${shown.length ? `<div class="list">${shown.map(b => card(b, false)).join('')}</div>` : `<p class="empty">${t('noneDay')}</p>`}
       </section></div></div>`;
@@ -417,7 +420,22 @@ async function listView() {
   $('#add').onclick = addSheet;
   pane.onclick = e => { const b = e.target.closest('[data-act]'); if (b) act(b.dataset.act, +b.dataset.id); };
 }
+function loadHtml(load) {
+  const rows = (load.restaurants || []).filter(x => x.slots.some(s => s.guests > 0));
+  if (!rows.length) return '';
+  return `<div class="load"><h3 class="sec">${t('loadTitle')}</h3>${rows.map(x => {
+    const r = rest(x.restaurantId);
+    return `<div class="loadrow">${S.restaurants.length > 1 ? `<span class="rtag" style="--rc:${esc(r.color)}">${esc(r.name)}</span>` : ''}<div class="loadslots">${x.slots.filter(s => s.guests > 0).map(s => {
+      const lvl = x.cap ? (s.guests > x.cap ? 'over' : s.guests >= x.cap * 0.8 ? 'high' : '') : '';
+      return `<span class="ls ${lvl}"><b class="mono">${s.time}</b> ${s.guests}${x.cap ? '/' + x.cap : ''}</span>`;
+    }).join('')}</div></div>`;
+  }).join('')}</div>`;
+}
 const findB = id => S.pending.find(b => b.id === id) || S.day.find(b => b.id === id);
+const addMin = (hhmm, m) => { const [h, mi] = hhmm.split(':').map(Number); const x = h * 60 + mi + m; return pad(Math.floor(x / 60) % 24) + ':' + pad(x % 60); };
+async function loadAt(rid, date, time, party, ignore) {
+  try { const d = await api('GET', `/api/bookings/load?restaurant=${rid}&date=${date}&time=${encodeURIComponent(time)}&party=${party}${ignore ? '&ignore=' + ignore : ''}`, undefined, { quiet: true }); return d.restaurants[0]; } catch { return null; }
+}
 function summaryHtml(b) { const r = rest(b.restaurantId); return `<p><b>${esc(b.name)}</b> · ${b.party} ${t('guests')} · <span class="mono">${esc(b.time)}</span> ${dayShort(b.date)}<br><span class="muted">${esc(r.name)} · ${esc(b.phoneFmt)} · ${t('ref')} ${esc(b.ref)}</span></p>${guestChips(b)}`; }
 function mailBlock(m) {
   return `<div class="mailhead"><span>From</span><b>${esc(m.from)}</b><span>To</span><b>${esc(m.to)}</b>${m.replyTo ? `<span>Reply-to</span><b>${esc(m.replyTo)}</b>` : ''}<span>Subject</span><b>${esc(m.subject)}</b></div><iframe class="mailframe" sandbox title="Email"></iframe>`;
@@ -438,7 +456,9 @@ async function act(kind, id) {
   if (kind === 'confirm') {
     let pv = null;
     if (b.email) { try { pv = await api('POST', `/api/bookings/${b.id}/preview`, { kind: 'confirm' }); } catch { return; } }
-    sheet(`<h2>${t('confirmTitle')}</h2>${summaryHtml(b)}${pv ? `${pv.ownMailbox ? '' : `<p class="note warn">${t('fallbackWarn')}</p>`}<p class="muted small">${t('guestGets')}</p>${mailBlock(pv)}` : `<p class="note">${t('noEmail')}</p>`}
+    const ld = await loadAt(b.restaurantId, b.date, b.time, 0);
+    const ldHtml = ld ? (ld.cap && ld.peak > ld.cap ? `<p class="note bad">${t('loadOver', { a: b.time, b: addMin(b.time, ld.stayHere), n: ld.peak, c: ld.cap })}</p>` : `<p class="note">${t('loadNow', { a: b.time, b: addMin(b.time, ld.stayHere), n: ld.peak, c: ld.cap ? '/' + ld.cap : '' })}</p>`) : '';
+    sheet(`<h2>${t('confirmTitle')}</h2>${summaryHtml(b)}${ldHtml}${pv ? `${pv.ownMailbox ? '' : `<p class="note warn">${t('fallbackWarn')}</p>`}<p class="muted small">${t('guestGets')}</p>${mailBlock(pv)}` : `<p class="note">${t('noEmail')}</p>`}
       <div class="row end"><button class="btn" data-close>${t('no')}</button><button class="btn pri" id="go">${b.email ? t('confirmSend') : t('confirm')}</button></div>`, s => {
       if (pv) fillFrame(s, pv.html);
       $('#go').onclick = async e => { e.target.disabled = true; const nb = await doAction(b, 'confirm'); if (nb) { toast(b.email ? t('confirmed', { e: b.email }) : t('confirmedNoMail')); listView(); } else e.target.disabled = false; };
@@ -498,6 +518,7 @@ function addSheet() {
       ${err('time')}
       <div class="g2"><label class="f" for="a-ph">${t('phone')}<input id="a-ph" type="tel" inputmode="tel" placeholder="0412 345 678" value="${esc(D.phone)}">${err('phone')}</label>
         <label class="f" for="a-n">${t('guestName')}<input id="a-n" value="${esc(D.name)}" maxlength="120">${err('name')}</label></div>
+      <p id="a-load" class="note" hidden></p>
       ${known && known.length ? `<p class="note">${t('guestKnown', { n: known.length, s: known.filter(x => x.status === 'seated').length, x: known.filter(x => x.status === 'noshow').length })}</p>` : ''}
       <label class="f" for="a-e">${t('guestEmail')}<input id="a-e" type="email" value="${esc(D.email)}" maxlength="190">${err('email')}</label>
       <label class="f" for="a-no">${t('reqLbl')}<textarea id="a-no" rows="2" maxlength="500">${esc(D.note)}</textarea></label>
@@ -507,6 +528,19 @@ function addSheet() {
       <div class="row end"><button class="btn" data-close>${t('no')}</button><button class="btn pri" id="a-go">${t('saveConfirmed')}</button></div>`, () => {
       const keep = () => { const g = s => $(s); if (g('#a-r')) D.restaurantId = +g('#a-r').value; D.party = g('#a-p').value; D.date = g('#a-d').value; D.time = g('#a-t').value; D.name = g('#a-n').value; D.phone = g('#a-ph').value; D.email = g('#a-e').value; D.note = g('#a-no').value; D.override = !!(g('#a-ov') && g('#a-ov').checked); D.sendEmail = g('#a-s').checked; };
       const ar = $('#a-r'); if (ar) ar.onchange = () => { keep(); draw(); };
+      const showLoad = async () => {
+        keep(); const el = $('#a-load'); if (!el) return;
+        const party = parseInt(D.party, 10) || 0;
+        if (!D.date || !D.time || !party) { el.hidden = true; return; }
+        const ld = await loadAt(D.restaurantId, D.date, D.time, party);
+        if (!ld || !$('#a-load')) return;
+        const m = ld.peak + party, over = ld.cap && m > ld.cap, v = { a: D.time, b: addMin(D.time, ld.stayHere), n: ld.peak, m, c: ld.cap ? '/' + ld.cap : '' };
+        el.className = over ? 'note bad' : 'note';
+        el.textContent = over ? t('loadAddOver', { ...v, c: ld.cap }) + (isOwner() ? t('loadNeedOverride') : t('loadStaffOver')) : t('loadAdd', v);
+        el.hidden = false;
+      };
+      ['#a-d', '#a-t', '#a-p'].forEach(sel => $(sel).addEventListener('change', showLoad));
+      showLoad();
       $('#a-ph').onchange = async () => {
         keep();
         try { const g = await api('GET', '/api/bookings/guest?phone=' + encodeURIComponent(D.phone)); known = g.bookings; if (known.length) { if (!D.name) D.name = known[0].name; if (!D.email) D.email = known[0].email; } draw(); $('#a-n').focus(); } catch { /* ignore */ }
@@ -578,8 +612,10 @@ async function restView(selectId) {
           <label class="f" for="s-max">${t('r_maxDays')}<input id="s-max" type="number" min="1" max="365" value="${R.maxDays}"></label>
           <label class="f" for="s-mp">${t('r_maxParty')}<input id="s-mp" type="number" min="1" max="50" value="${R.maxParty}"></label>
           <label class="f" for="s-cap">${t('r_cap')}<input id="s-cap" type="number" min="0" max="1000" value="${R.cap}"></label>
+          <label class="f" for="s-stay">${t('r_stay')}${sel('s-stay', R.stay, [30, 45, 60, 75, 90, 105, 120, 150, 180])}</label>
+          <label class="f" for="s-stayE">${t('r_stayEvening')}${sel('s-stayE', R.stayEvening, [30, 45, 60, 75, 90, 105, 120, 150, 180])}</label>
           <label class="f" for="s-rm">${t('r_remind')}${sel('s-rm', R.remind, [0, 15, 30, 60, 120])}</label>
-        </div><p class="muted small">${t('expireNote')}</p></section>
+        </div><p class="muted small">${t('capNote')} ${t('expireNote')}</p></section>
       <section class="panel stack" style="gap:10px"><h2 class="h" style="margin:0">${t('mailTitle')}</h2>
         ${mailState}<p class="muted small">${t('mailHelp')}</p>
         ${RS.encryption ? '' : `<p class="note bad">${t('noEncKey')}</p>`}
@@ -639,7 +675,7 @@ async function restView(selectId) {
     const body = {
       online: $('#s-on').checked, name: $('#s-name').value, domain: $('#s-dom').value, color, timezone: $('#s-tz').value, phone: $('#s-ph').value, email: $('#s-em').value,
       address: $('#s-ad').value, extraNote: $('#s-ex').value, privacyUrl: $('#s-pr').value.trim(), week, specials,
-      rules: { interval: +$('#s-int').value, lastBefore: +$('#s-lb').value, lead: +$('#s-lead').value, maxDays: +$('#s-max').value, maxParty: +$('#s-mp').value, cap: +$('#s-cap').value, remind: +$('#s-rm').value },
+      rules: { interval: +$('#s-int').value, lastBefore: +$('#s-lb').value, lead: +$('#s-lead').value, maxDays: +$('#s-max').value, maxParty: +$('#s-mp').value, cap: +$('#s-cap').value, remind: +$('#s-rm').value, stay: +$('#s-stay').value, stayEvening: +$('#s-stayE').value },
       mail: { fromName: $('#m-name').value, host: $('#m-host').value.trim(), port: +$('#m-port').value, user: $('#m-user').value.trim(), pass: $('#m-pass').value, clearPass: !!($('#m-clear') && $('#m-clear').checked) },
     };
     $('#ssave').disabled = true;
