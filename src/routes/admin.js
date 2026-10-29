@@ -71,7 +71,7 @@ router.put('/users/:id', async (req, res) => {
   await db().transaction(async trx => {
     if (Object.keys(patch).length) await trx('users').where({ id }).update(patch);
     if (rids) { await trx('user_restaurants').where({ user_id: id }).del(); if (rids.length) await trx('user_restaurants').insert(rids.map(r => ({ user_id: id, restaurant_id: r }))); }
-    if (patch.active === false) await trx('sessions').where({ user_id: id }).del();
+    if (patch.active === false) { await trx('sessions').where({ user_id: id }).del(); await trx('push_subscriptions').where({ user_id: id }).del(); }
   });
   await store.audit(req, 'user_updated', `${cur.name} · ${Object.keys(patch).concat(rids ? ['restaurants'] : []).join(', ')}`);
   res.json({ users: await userList() });
@@ -90,6 +90,7 @@ router.post('/users/:id/logout-all', async (req, res) => {
   const user = await db()('users').where({ id: Number(req.params.id) }).first();
   if (!user) return res.status(404).json({ error: 'not_found' });
   const n = await db()('sessions').where({ user_id: user.id }).del();
+  await require('../lib/push').removeAllFor(user.id);
   await store.audit(req, 'user_logout_all', `${user.email} · ${n}`);
   res.json({ users: await userList(), self: user.id === req.user.id });
 });

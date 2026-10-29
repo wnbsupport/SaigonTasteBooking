@@ -3,6 +3,7 @@
 'use strict';
 
 /* ============ helpers ============ */
+const VER = (document.querySelector('meta[name="app-version"]') || {}).content || '';
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -40,6 +41,7 @@ const DICT = {
     guestKnown: 'Khách này đã đặt {n} lần: {s} lần đến, {x} lần không đến.',
     e_required: 'Bắt buộc.', e_invalid: 'Không hợp lệ.', e_phone: 'SĐT Úc không hợp lệ.', e_email: 'Email không hợp lệ.', e_party: 'Số khách không hợp lệ.', e_name: 'Nhập tên khách.', e_time_outside: 'Giờ này ngoài giờ mở cửa của quán (hoặc đã qua).', e_time_full: 'Khung giờ này đã đủ khách.', e_time_required: 'Chọn ngày và giờ.', e_dup: 'Khách này đã có booking trong ngày tại quán (mã {r}).',
     loadTitle: 'Khách trong quán theo giờ', loadNow: 'Lúc {a}–{b}: tối đa {n}{c} khách trong quán (đã tính booking này).', loadOver: 'Vượt sức chứa: lúc {a}–{b} có tối đa {n}/{c} khách.', loadAdd: 'Lúc {a}–{b}: đang có tối đa {n}{c} khách, thêm booking này thành {m}{c}.', loadAddOver: 'Thêm booking này sẽ vượt sức chứa ({m}/{c} khách lúc {a}–{b}).', loadNeedOverride: ' Tick “Cho phép … vượt sức chứa” nếu vẫn muốn nhận.', loadStaffOver: ' Hệ thống sẽ không cho lưu, chọn giờ khác hoặc báo chủ.',
+    nTitle: 'Thông báo trên thiết bị này', nOn: 'Đang bật: thiết bị này nhận thông báo khi có booking mới và khi booking chờ lâu.', nOff: 'Đang tắt.', nEnable: 'Bật thông báo', nDisable: 'Tắt thông báo', nTest: 'Gửi thử', nTestSent: 'Đã gửi thử. Thông báo sẽ hiện trong vài giây.', nTestFail: 'Không gửi được tới thiết bị này. Tắt rồi bật lại thông báo.', nEnabled: 'Đã bật thông báo', nDisabled: 'Đã tắt thông báo', nDenied: 'Điện thoại đang chặn thông báo của app. Mở Cài đặt của máy → Thông báo → cho phép Saigon Taste / Chrome, rồi thử lại.', nIos: 'Trên iPhone/iPad: thêm app ra màn hình chính (Safari → Chia sẻ → Thêm vào MH chính), mở app từ biểu tượng đó rồi bật thông báo. Cần iOS 16.4 trở lên.', nUnsupported: 'Trình duyệt này không hỗ trợ thông báo. Dùng Chrome trên Android, hoặc app trên màn hình chính của iPhone/iPad.', nHttps: 'Thông báo chỉ hoạt động trên địa chỉ https.', nError: 'Không bật được thông báo: {e}',
     menu: 'Menu', mPending: 'Cần xác nhận', mDay: 'Theo ngày', andMore: 'và {n} booking khác', call: 'Gọi',
     del: 'Xóa đơn', delTitle: 'Xóa đơn này?', delText: 'Đơn bị xóa vĩnh viễn khỏi hệ thống (kể cả lịch sử và email đã gửi). Khách không nhận được email nào. Thao tác được ghi vào Nhật ký.', delConfirmedWarn: 'Khách đã được xác nhận. Nếu khách không đến nữa, nên bấm Hủy để giữ lịch sử; chỉ Xóa khi đây là đơn thử hoặc đơn rác.', delReason: 'Lý do (ghi vào nhật ký, không bắt buộc)', delGo: 'Xóa vĩnh viễn', deleted: 'Đã xóa đơn',
     printTitle: 'Danh sách khách', printBtn: 'In', csv: 'Tải CSV', notConfirmed: 'chưa xác nhận', total: 'Tổng', venue: 'Quán', pax: 'Số', guest: 'Khách',
@@ -67,7 +69,7 @@ const DICT = {
     lf_all: 'Tất cả', lf_bookings: 'Booking & cài đặt', lf_security: 'Đăng nhập & bảo mật', when: 'Thời gian', who: 'Người làm', what: 'Hành động', detail: 'Chi tiết', more: 'Xem thêm', logRo: 'Nhật ký chỉ đọc, không ai sửa hay xóa được, kể cả chủ.', noLog: 'Chưa có hoạt động.',
     a_login: 'Đăng nhập', a_login_failed: 'Đăng nhập sai', a_login_locked: 'Khóa đăng nhập', a_logout: 'Đăng xuất', a_logout_all: 'Đăng xuất mọi thiết bị', a_user_logout_all: 'Đăng xuất mọi thiết bị của người dùng', a_auto_logout: 'Tự đăng xuất (không dùng)', a_password_reset_request: 'Yêu cầu đặt lại mật khẩu', a_password_set: 'Đặt mật khẩu', a_password_changed: 'Đổi mật khẩu', a_lang_changed: 'Đổi ngôn ngữ',
     a_booking_created_web: 'Booking mới từ website', a_booking_created_staff: 'Nhân viên thêm booking', a_booking_confirm: 'Xác nhận booking', a_booking_decline: 'Từ chối booking', a_booking_cancel: 'Hủy booking', a_booking_seated: 'Đánh dấu đã đến', a_booking_noshow: 'Đánh dấu không đến', a_booking_undo: 'Hoàn tác', a_booking_expired: 'Booking hết hạn',
-    a_booking_deleted: 'Xóa đơn', a_csv_export: 'Xuất CSV', a_print: 'In danh sách khách', a_restaurant_created: 'Thêm quán', a_restaurant_updated: 'Sửa cài đặt quán', a_key_rotated: 'Tạo khóa kết nối mới', a_mail_test: 'Gửi thử email', a_user_invited: 'Mời người dùng', a_user_updated: 'Sửa người dùng', a_user_link: 'Gửi link mật khẩu', a_user_unlocked: 'Mở khóa đăng nhập', a_settings_updated: 'Sửa cài đặt bảo mật', a_deploy_cleanup: 'Dọn bản deploy cũ',
+    a_booking_deleted: 'Xóa đơn', a_push_on: 'Bật thông báo trên thiết bị', a_push_off: 'Tắt thông báo trên thiết bị', a_csv_export: 'Xuất CSV', a_print: 'In danh sách khách', a_restaurant_created: 'Thêm quán', a_restaurant_updated: 'Sửa cài đặt quán', a_key_rotated: 'Tạo khóa kết nối mới', a_mail_test: 'Gửi thử email', a_user_invited: 'Mời người dùng', a_user_updated: 'Sửa người dùng', a_user_link: 'Gửi link mật khẩu', a_user_unlocked: 'Mở khóa đăng nhập', a_settings_updated: 'Sửa cài đặt bảo mật', a_deploy_cleanup: 'Dọn bản deploy cũ',
     weekdays: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'], wd: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
   },
   en: {
@@ -99,6 +101,7 @@ const DICT = {
     guestKnown: 'This guest has booked {n} time(s): {s} visit(s), {x} no-show(s).',
     e_required: 'Required.', e_invalid: 'Not valid.', e_phone: 'Not a valid Australian number.', e_email: 'Not a valid email.', e_party: 'Invalid number of guests.', e_name: 'Enter the guest name.', e_time_outside: 'That time is outside opening hours (or already passed).', e_time_full: 'That time slot is full.', e_time_required: 'Choose a date and time.', e_dup: 'This guest already has a booking that day (ref {r}).',
     loadTitle: 'Guests in the restaurant by time', loadNow: '{a}–{b}: at most {n}{c} guests in the restaurant (this booking included).', loadOver: 'Over capacity: up to {n}/{c} guests at {a}–{b}.', loadAdd: '{a}–{b}: up to {n}{c} guests now, {m}{c} with this booking.', loadAddOver: 'This booking would go over capacity ({m}/{c} guests at {a}–{b}).', loadNeedOverride: ' Tick “Allow … over capacity” to take it anyway.', loadStaffOver: ' It cannot be saved; choose another time or ask the owner.',
+    nTitle: 'Notifications on this device', nOn: 'On: this device is notified about new bookings and bookings waiting too long.', nOff: 'Off.', nEnable: 'Turn on notifications', nDisable: 'Turn off', nTest: 'Send test', nTestSent: 'Test sent. It should appear in a few seconds.', nTestFail: 'Could not reach this device. Turn notifications off and on again.', nEnabled: 'Notifications on', nDisabled: 'Notifications off', nDenied: 'This device is blocking notifications for the app. Open the device Settings → Notifications → allow Saigon Taste / Chrome, then try again.', nIos: 'On iPhone/iPad: add the app to the Home Screen (Safari → Share → Add to Home Screen), open it from that icon, then turn notifications on. Needs iOS 16.4 or later.', nUnsupported: 'This browser does not support notifications. Use Chrome on Android, or the Home Screen app on iPhone/iPad.', nHttps: 'Notifications only work on an https address.', nError: 'Could not turn on notifications: {e}',
     menu: 'Menu', mPending: 'To confirm', mDay: 'By day', andMore: 'and {n} more', call: 'Call',
     del: 'Delete', delTitle: 'Delete this booking?', delText: 'The booking is removed for good (including its history and sent emails). The guest gets no email. This is recorded in the Activity log.', delConfirmedWarn: 'This guest was confirmed. If they are not coming, Cancel keeps the history; delete only test or spam bookings.', delReason: 'Reason (for the log, optional)', delGo: 'Delete for good', deleted: 'Booking deleted',
     printTitle: 'Guest list', printBtn: 'Print', csv: 'Download CSV', notConfirmed: 'not confirmed', total: 'Total', venue: 'Venue', pax: 'Pax', guest: 'Guest',
@@ -123,7 +126,7 @@ const DICT = {
     lf_all: 'All', lf_bookings: 'Bookings & settings', lf_security: 'Sign-in & security', when: 'Time', who: 'Who', what: 'Action', detail: 'Details', more: 'Load more', logRo: 'The log is read-only. Nobody can edit or delete entries, including the owner.', noLog: 'No activity yet.',
     a_login: 'Signed in', a_login_failed: 'Failed sign-in', a_login_locked: 'Sign-in locked', a_logout: 'Signed out', a_logout_all: 'Signed out of all devices', a_user_logout_all: 'Signed a user out of all devices', a_auto_logout: 'Auto sign-out (idle)', a_password_reset_request: 'Password reset requested', a_password_set: 'Password set', a_password_changed: 'Password changed', a_lang_changed: 'Language changed',
     a_booking_created_web: 'New website booking', a_booking_created_staff: 'Booking added by staff', a_booking_confirm: 'Booking confirmed', a_booking_decline: 'Booking declined', a_booking_cancel: 'Booking cancelled', a_booking_seated: 'Marked arrived', a_booking_noshow: 'Marked no-show', a_booking_undo: 'Undo', a_booking_expired: 'Booking expired',
-    a_booking_deleted: 'Booking deleted', a_csv_export: 'CSV exported', a_print: 'Guest list printed', a_restaurant_created: 'Restaurant added', a_restaurant_updated: 'Restaurant settings changed', a_key_rotated: 'Connection key replaced', a_mail_test: 'Test email', a_user_invited: 'User invited', a_user_updated: 'User changed', a_user_link: 'Password link sent', a_user_unlocked: 'Sign-in unlocked', a_settings_updated: 'Security settings changed', a_deploy_cleanup: 'Old deploys removed',
+    a_booking_deleted: 'Booking deleted', a_push_on: 'Notifications turned on', a_push_off: 'Notifications turned off', a_csv_export: 'CSV exported', a_print: 'Guest list printed', a_restaurant_created: 'Restaurant added', a_restaurant_updated: 'Restaurant settings changed', a_key_rotated: 'Connection key replaced', a_mail_test: 'Test email', a_user_invited: 'User invited', a_user_updated: 'User changed', a_user_link: 'Password link sent', a_user_unlocked: 'Sign-in unlocked', a_settings_updated: 'Security settings changed', a_deploy_cleanup: 'Old deploys removed',
     weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], wd: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
   },
 };
@@ -224,6 +227,7 @@ const isOwner = () => S.me && S.me.user.role === 'owner';
 /* ============ boot & routing ============ */
 async function boot() {
   const path = location.pathname;
+  if (new URLSearchParams(location.search).get('view') === 'pending') { S.tab = 'list'; S.mview = 'pending'; history.replaceState(null, '', '/'); }
   if (path === '/password') return passwordPage();
   try {
     const me = await api('GET', '/api/auth/me', undefined, { allow401: true });
@@ -238,6 +242,7 @@ function signedIn(me) {
   if (!isOwner() && S.tab !== 'list') S.tab = 'list';
   render();
   startPolling();
+  pushSync();
 }
 function sessionEnded(reason) {
   stopPolling();
@@ -251,7 +256,7 @@ function langSeg(id) { return `<div class="seg" id="${id}" role="group" aria-lab
 function loginView(msg = '') {
   history.replaceState(null, '', '/');
   $('#root').innerHTML = `<div class="wrap"><div class="login"><div class="panel stack">
-    <div class="login-brand"><img src="/brand/logo.png" alt="Saigon Taste" width="150" height="227"></div>
+    <div class="login-brand"><img src="/brand/logo.png?v=${VER}" alt="Saigon Taste" width="150" height="227"></div>
     <div class="row" style="justify-content:space-between"><div><h1 style="font-size:21px">${t('signIn')}</h1><p class="muted">Saigon Taste Booking</p></div>${langSeg('ll')}</div>
     ${msg ? `<p class="note warn">${esc(msg)}</p>` : ''}
     <form id="lf" class="stack" style="gap:12px" novalidate>
@@ -326,7 +331,7 @@ function render() {
   if (!tabs.some(x => x[0] === S.tab)) S.tab = 'list';
   const whoLine = `${esc(u.name)} · ${isOwner() ? t('owner') : t('staff') + ' – ' + S.restaurants.map(r => esc(r.name)).join(', ')}`;
   $('#root').innerHTML = `<header class="top"><div class="wrap">
-      <div class="brand"><img src="/brand/mark.png" alt="" width="22" height="30">Saigon Taste</div>
+      <div class="brand"><img src="/brand/mark.png?v=${VER}" alt="" width="22" height="30">Saigon Taste</div>
       <div class="who"><span>${whoLine}</span>
         ${langSeg('lang')}
         <label class="check small" for="snd"><input type="checkbox" id="snd" ${S.sound ? 'checked' : ''}> 🔔 ${t('sound')}</label></div>
@@ -335,11 +340,13 @@ function render() {
     <main class="wrap app${tabs.length < 2 ? ' nonav' : ''}" id="main"><div id="offline"></div><div id="pane"></div></main>`;
   $('#menu').onclick = () => sheet(`<h2>${t('menu')}</h2><p>${whoLine}</p>${langSeg('mlang')}
       <label class="check" for="msnd"><input type="checkbox" id="msnd" ${S.sound ? 'checked' : ''}> 🔔 ${t('sound')}</label>
+      <div class="panel stack" style="gap:8px;padding:12px"><b>🔔 ${t('nTitle')}</b><p class="small muted" id="nstate">…</p><div class="row" id="nbtns"></div></div>
       <button class="btn dang" id="mlogoutall" style="align-self:flex-start">${t('logoutAll')}</button>
       <div class="row end"><button class="btn" data-close>${t('close')}</button><button class="btn pri" id="mlogout">${t('signOut')}</button></div>`, () => {
     $$('#mlang [data-l]').forEach(b => b.onclick = async () => { setLang(b.dataset.l); closeSheet(); try { await api('PATCH', '/api/auth/me', { lang: LANG }); } catch { /* keep local */ } render(); });
     $('#msnd').onchange = e => { S.sound = e.target.checked; ls.set('sound', S.sound); if (S.sound) { chime(); toast(t('soundOn')); } else toast(t('soundOff')); closeSheet(); render(); };
     $('#mlogout').onclick = () => { closeSheet(); signOut(); };
+    pushPanel();
     $('#mlogoutall').onclick = () => sheet(`<h2>${t('logoutAllQ')}</h2><p>${t('logoutAllMe')}</p><div class="row end"><button class="btn" data-close>${t('no')}</button><button class="btn pri danger" id="la-go">${t('logoutAll')}</button></div>`, () => {
       $('#la-go').onclick = async () => { stopPolling(); try { await api('POST', '/api/auth/logout-all', {}); } catch { /* ignore */ } closeSheet(); S.me = null; loginView(t('loggedOutAll')); };
     });
@@ -351,7 +358,7 @@ function render() {
   renderOffline();
   ({ list: listView, rest: restView, users: usersView, log: logView })[S.tab]();
 }
-async function signOut() { stopPolling(); try { await api('POST', '/api/auth/logout', {}); } catch { /* ignore */ } S.me = null; loginView(); }
+async function signOut() { stopPolling(); const sub = await pushSub(); try { await api('POST', '/api/auth/logout', sub ? { endpoint: sub.endpoint } : {}); } catch { /* ignore */ } S.me = null; loginView(); }
 function renderOffline() { const el = $('#offline'); if (el) el.innerHTML = online ? '' : `<p class="offline">${t('offline')}</p>`; }
 function refresh() { if (!S.me) return; if (sheetOpen()) { pendingReload = true; return; } if (S.tab === 'list') listView(); }
 
@@ -861,8 +868,59 @@ async function logView(before) {
   const lm = $('#lm'); if (lm) lm.onclick = () => logView(last.id);
 }
 
+/* ============ push notifications ============ */
+const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const standalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const pushSupported = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+function b64ToBytes(b64) { const p = '='.repeat((4 - b64.length % 4) % 4); const s = atob((b64 + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(s, c => c.charCodeAt(0)); }
+async function swReg() { if (!('serviceWorker' in navigator)) return null; try { return await Promise.race([navigator.serviceWorker.ready, new Promise(r => setTimeout(() => r(null), 4000))]); } catch { return null; } }
+async function pushSub() { if (!pushSupported()) return null; const reg = await swReg(); if (!reg) return null; try { return await reg.pushManager.getSubscription(); } catch { return null; } }
+/** After sign-in: make sure this device's subscription belongs to the person now signed in. */
+async function pushSync() {
+  if (!pushSupported() || Notification.permission !== 'granted') return;
+  const sub = await pushSub();
+  if (sub) api('POST', '/api/push/subscribe', { subscription: sub.toJSON() }, { quiet: true }).catch(() => {});
+}
+async function pushPanel() {
+  const st = $('#nstate'), bt = $('#nbtns'); if (!st) return;
+  const set = (text, btns = '') => { st.textContent = text; bt.innerHTML = btns; };
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost') return set(t('nHttps'));
+  if (!pushSupported()) return set(isIOS() && !standalone() ? t('nIos') : t('nUnsupported'));
+  if (Notification.permission === 'denied') return set(t('nDenied'));
+  const sub = await pushSub();
+  if (!$('#nstate')) return;
+  if (sub && Notification.permission === 'granted') {
+    set(t('nOn'), `<button class="btn sm" id="ntest">${t('nTest')}</button><button class="btn sm" id="noff">${t('nDisable')}</button>`);
+    $('#ntest').onclick = async () => { try { const r = await api('POST', '/api/push/test', { endpoint: sub.endpoint }); toast(r.sent ? t('nTestSent') : t('nTestFail')); } catch { /* toast */ } };
+    $('#noff').onclick = async () => { try { await api('POST', '/api/push/unsubscribe', { endpoint: sub.endpoint, byUser: true }); await sub.unsubscribe(); } catch { /* ignore */ } toast(t('nDisabled')); pushPanel(); };
+  } else {
+    set(t('nOff') + (isIOS() && !standalone() ? ' ' + t('nIos') : ''), `<button class="btn sm pri" id="non">${t('nEnable')}</button>`);
+    $('#non').onclick = async e => {
+      e.target.disabled = true;
+      try {
+        const perm = await Notification.requestPermission();
+        if (perm !== 'granted') { pushPanel(); return; }
+        const { publicKey } = await api('GET', '/api/push/key');
+        const reg = await swReg();
+        if (!reg) throw new Error('service worker');
+        const s2 = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToBytes(publicKey) });
+        await api('POST', '/api/push/subscribe', { subscription: s2.toJSON(), fresh: true });
+        toast(t('nEnabled'));
+      } catch (err) { if (!err.status) toast(t('nError', { e: err.message || err })); }
+      pushPanel();
+    };
+  }
+}
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('message', e => {
+    const d = e.data || {};
+    if (d.type === 'push' && S.me) poll();
+    if (d.type === 'open' && S.me) { S.tab = 'list'; S.mview = 'pending'; closeSheet(); render(); }
+  });
+}
+
 /* ============ service worker ============ */
-if ('serviceWorker' in navigator && location.protocol === 'https:') {
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
 }
 

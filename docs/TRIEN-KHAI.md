@@ -172,6 +172,8 @@ Làm cho từng website (mandolinerestaurant.com.au, touchstonecafe.au):
 2. Trên iPad hoặc điện thoại ở quầy:
    - Mở app bằng Safari, bấm **Chia sẻ → Thêm vào MH chính**.
    - Mở app từ biểu tượng Saigon Taste trên màn hình chính, đăng nhập, bật **🔔 Âm thanh** trong menu ☰.
+   - Menu ☰ → **Thông báo trên thiết bị này** → **Bật thông báo** → bấm **Cho phép**, rồi **Gửi thử**. Điện thoại sẽ báo khi có booking mới hoặc booking chờ lâu, kể cả khi đang khóa màn hình.
+   - iPhone/iPad: cần iOS 16.4 trở lên và phải mở app **từ biểu tượng trên màn hình chính** (không phải trong Safari) thì mới bật được thông báo.
 3. Khi đăng nhập trên iPad/điện thoại ở quầy, để tick **Ghi nhớ đăng nhập**: app không tự đăng xuất, mở lại là dùng được ngay. Trên máy lạ hoặc máy dùng chung thì bỏ tick.
 4. Nhân viên nghỉ việc hoặc mất máy: **Tài khoản → Sửa → Đăng xuất khỏi mọi thiết bị**, rồi bỏ tick **Đang hoạt động** nếu không cho dùng nữa.
 
@@ -213,5 +215,7 @@ Làm cho từng website (mandolinerestaurant.com.au, touchstonecafe.au):
 | Gửi thử email lỗi "sai email hoặc mật khẩu SMTP" | Kiểm tra lại mật khẩu hộp mail, hoặc đặt lại mật khẩu trong Site Tools rồi nhập lại |
 | Khách không nhận được email | Xem **Chi tiết** booking → mục Email (đã gửi, lỗi, gửi bằng hộp mail nào). Bảo khách xem mục Spam. Kiểm tra DKIM/SPF |
 | Cảnh báo SiteGround quá nhiều inode | Kiểm tra "Tự xóa bản deploy cũ" đang bật (Tài khoản → Hệ thống). Dọn tay lần đầu: File Manager → `public_html/.nodeapp`, giữ `1234567890-origin`, thư mục `latest` trỏ tới, thư mục ngay trước nó, `.env-local`, `app.json`, `app_source.zip`, `latest`; xóa các thư mục số còn lại, mỗi lần khoảng 5 thư mục |
+| Không nhận được thông báo trên điện thoại | Menu ☰ → Gửi thử. Nếu báo bị chặn: Cài đặt của máy → Thông báo → cho phép Chrome / Saigon Taste. Android: tắt tối ưu pin cho Chrome. iPhone: mở app từ màn hình chính |
+| Điện thoại vẫn hiện biểu tượng app cũ | Xóa biểu tượng trên màn hình chính, xóa dữ liệu trang `booking…` trong cài đặt trình duyệt, rồi thêm lại |
 | Quên mật khẩu chủ | Bấm "Quên mật khẩu?" ở trang đăng nhập |
 | Mất `ENCRYPTION_KEY` | Đặt khóa mới, deploy lại, rồi nhập lại mật khẩu hộp mail của từng quán |

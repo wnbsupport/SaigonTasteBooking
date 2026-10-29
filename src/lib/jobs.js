@@ -28,14 +28,16 @@ async function sendReminders(now = Date.now()) {
   let sent = 0;
   for (const r of rs) {
     const mins = r.rules.remind;
-    if (!mins || !r.email) continue;
+    if (!mins) continue;
     const rows = await db()('bookings').where({ restaurant_id: r.id, status: 'pending' }).whereNull('reminded_at')
       .where('created_at', '<', now - mins * 60000).where('starts_at', '>', now).limit(50);
     for (const b of rows) {
       const n = await db()('bookings').where({ id: b.id }).whereNull('reminded_at').update({ reminded_at: now });
       if (!n) continue;
-      const m = tpl.reminderAlert(r, b, Math.round((now - Number(b.created_at)) / 60000));
-      await mailer.queue({ kind: 'staff_remind', sender: 'system', restaurantId: r.id, bookingId: b.id, to: r.email, subject: m.subject, html: m.html, text: m.text });
+      const waited = Math.round((now - Number(b.created_at)) / 60000);
+      require('./push').notifyBooking('remind', r, b, waited);
+      const m = tpl.reminderAlert(r, b, waited);
+      if (r.email) await mailer.queue({ kind: 'staff_remind', sender: 'system', restaurantId: r.id, bookingId: b.id, to: r.email, subject: m.subject, html: m.html, text: m.text });
       await store.event(b.id, 'system', 'reminded', String(mins));
       sent++;
     }

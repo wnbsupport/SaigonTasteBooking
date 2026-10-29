@@ -81,13 +81,17 @@ router.post('/login', loginLimit, async (req, res) => {
 /** Sign this user out on every device (lost phone, shared iPad…). */
 router.post('/logout-all', A.requireAuth, async (req, res) => {
   const n = await db()('sessions').where({ user_id: req.user.id }).del();
+  await require('../lib/push').removeAllFor(req.user.id);
   await store.audit(req, 'logout_all', String(n));
   res.clearCookie(A.COOKIE, { httpOnly: true, secure: config.secureCookies, sameSite: 'lax', path: '/' });
   res.json({ ok: true, sessions: n });
 });
 
 router.post('/logout', async (req, res) => {
-  if (req.user) await store.audit(req, 'logout', '');
+  if (req.user) {
+    if (req.body.endpoint) await require('../lib/push').removeSubscription(req.user.id, req.body.endpoint); // stop notifications on this device
+    await store.audit(req, 'logout', '');
+  }
   await A.destroySession(req, res);
   res.json({ ok: true });
 });

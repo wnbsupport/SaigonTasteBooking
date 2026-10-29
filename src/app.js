@@ -63,6 +63,7 @@ function createApp() {
   app.use('/api/emails', bookings.emails);
   app.use('/api/restaurants', require('./routes/restaurants'));
   app.use('/api/admin', require('./routes/admin'));
+  app.use('/api/push', require('./routes/push'));
   app.use('/api', (req, res) => res.status(404).json({ error: 'not_found' }));
 
   // Service worker: the cache name carries the version, so each release replaces the old cache.
@@ -77,6 +78,12 @@ function createApp() {
     const r = await store.getRestaurantBy({ slug: String(req.params.slug).toLowerCase() });
     if (!r) return next();
     res.set('Cache-Control', 'no-cache').send(page('book.html', { name: escAttr(r.name), slug: escAttr(r.slug), color: escAttr(r.color), domain: escAttr(r.domain) }));
+  });
+
+  // Manifest with versioned icon URLs, so phones pick up a new logo after an update.
+  app.get('/manifest.webmanifest', (req, res) => {
+    res.set({ 'Content-Type': 'application/manifest+json; charset=utf-8', 'Cache-Control': 'no-cache' });
+    res.send(page('manifest.webmanifest'));
   });
 
   const spa = (req, res) => res.set('Cache-Control', 'no-cache').send(page('index.html'));

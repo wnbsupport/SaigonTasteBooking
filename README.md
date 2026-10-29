@@ -31,6 +31,13 @@ Hệ thống đặt bàn trung tâm cho các nhà hàng Saigon Taste (hiện có
 - Chờ quá thời gian cài đặt (mặc định 30 phút) thì quán nhận email nhắc. Booking chờ mà đã qua giờ hẹn tự chuyển **Hết hạn**.
 - Nhân viên tự thêm booking nhận qua điện thoại (đã xác nhận). Chủ được phép ghi đè ngoài giờ/vượt sức chứa.
 
+## Thông báo đẩy
+
+- Mỗi thiết bị tự bật trong menu ☰ → **Thông báo trên thiết bị này** (Android Chrome; iPhone/iPad iOS 16.4+ khi mở app từ màn hình chính).
+- Gửi khi có booking mới từ website và khi booking chờ quá thời gian nhắc. Nhân viên chỉ nhận thông báo của quán được giao; nội dung theo ngôn ngữ của từng người.
+- Khóa VAPID tự tạo ở lần chạy đầu và lưu trong database (mã hóa bằng `ENCRYPTION_KEY`), không cần biến môi trường.
+- Đăng xuất trên một thiết bị thì thiết bị đó ngừng nhận; "Đăng xuất khỏi mọi thiết bị" hoặc khóa người dùng thì ngừng trên mọi thiết bị.
+
 ## Email
 
 - Mỗi quán cài **hộp mail SiteGround của quán** trong app (Cài đặt quán → Email gửi khách). Mật khẩu được mã hóa bằng `ENCRYPTION_KEY`.

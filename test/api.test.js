@@ -351,10 +351,58 @@ test('missing body or a broken cookie does not crash the API', async () => {
   assert.equal(r3.status, 401);
 });
 
+test('push notifications: right people, right language, gone devices removed', async () => {
+  const push = require('../src/lib/push');
+  const got = [];
+  push.setSender(async (sub, payload) => {
+    if (sub.endpoint.includes('gone')) throw Object.assign(new Error('Gone'), { statusCode: 410 });
+    got.push({ endpoint: sub.endpoint, ...JSON.parse(payload) });
+  });
+  const key = await owner.get('/api/push/key');
+  assert.equal(key.status, 200); assert.ok(key.body.publicKey.length > 60);
+  const sub = id => ({ endpoint: `https://push.example/${id}`, keys: { p256dh: 'BP' + 'a'.repeat(85), auth: 'b'.repeat(22) } });
+  assert.equal((await owner.post('/api/push/subscribe', { subscription: sub('owner-phone'), fresh: true })).status, 200);
+  assert.equal((await owner.post('/api/push/subscribe', { subscription: sub('gone-device') })).status, 200);
+  assert.equal((await owner.post('/api/push/subscribe', { subscription: { endpoint: 'http://insecure' } })).status, 400);
+  const tom = H.client(); await tom.login('tom@test.au', 'tom-password-1');
+  await tom.post('/api/push/subscribe', { subscription: sub('tom-phone') });
+  await H.db()('users').where({ email: 'tom@test.au' }).update({ lang: 'en' });
+  const wait = () => new Promise(r => setTimeout(r, 150));
+
+  // Mandoline booking → owner only (Tom only has Touchstone)
+  await book(guestBody({ phone: '0401 900 001', date: H.dayIn(9), note: 'Window' }));
+  await wait();
+  assert.deepEqual(got.map(g => g.endpoint), ['https://push.example/owner-phone']);
+  assert.match(got[0].title, /^Booking mới · Mandoline$/);
+  assert.match(got[0].body, /Emily Tran · 2 khách · 12:00 /);
+  assert.equal(got[0].url, '/?view=pending');
+  assert.equal(await H.db()('push_subscriptions').where('endpoint', 'like', '%gone%').first(), undefined, 'gone device removed');
+
+  // Touchstone booking → owner + Tom (in English)
+  got.length = 0;
+  await fetch(`${base()}/api/public/v1/r/touchstone-cafe/book`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': '203.0.113.99' }, body: JSON.stringify(guestBody({ phone: '0401 900 002', date: H.dayIn(9), time: '10:00' })) });
+  await wait();
+  const tomMsg = got.find(g => g.endpoint.endsWith('tom-phone'));
+  assert.ok(tomMsg); assert.match(tomMsg.title, /^New booking · Touchstone Cafe$/); assert.match(tomMsg.body, /2 guests/);
+  assert.equal(got.length, 2);
+
+  // test button, then sign-out on this device stops its notifications
+  got.length = 0;
+  assert.equal((await tom.post('/api/push/test', { endpoint: 'https://push.example/tom-phone' })).body.sent, 1);
+  await tom.post('/api/auth/logout', { endpoint: 'https://push.example/tom-phone' });
+  assert.equal(await H.db()('push_subscriptions').where('endpoint', 'like', '%tom-phone').first(), undefined);
+  await H.db()('users').where({ email: 'tom@test.au' }).update({ lang: 'vi' });
+  push.setSender(async () => {});
+});
+
 test('the app pages are served', async () => {
   const c = H.client();
-  for (const p of ['/', '/password', '/manifest.webmanifest', '/sw.js', '/widget/booking-widget.js', '/icons/icon-192.png']) {
+  for (const p of ['/', '/password', '/manifest.webmanifest', '/sw.js', '/widget/booking-widget.js', '/icons/icon-192.png', '/icons/badge-96.png', '/brand/logo.png']) {
     assert.equal((await c.get(p)).status, 200, p);
   }
+  const man = await c.get('/manifest.webmanifest');
+  assert.match(man.text, /icon-192\.png\?v=\d+\.\d+\.\d+/, 'icon URLs carry the version');
+  assert.match((await c.get('/')).text, /apple-touch-icon\.png\?v=/);
+  assert.match((await c.get('/sw.js')).text, /addEventListener\('push'/);
   assert.equal((await c.get('/book/nope')).status, 404);
 });

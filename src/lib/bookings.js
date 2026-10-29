@@ -107,6 +107,7 @@ async function createBooking({ restaurant, input, mode, user = null, override = 
   delete b.restaurant;
   try {
     if (mode === 'public') {
+      require('./push').notifyBooking('new', r, b);
       if (R.emailOk(r.email)) {
         const m = tpl.newBookingAlert(r, b);
         await mailer.queue({ kind: 'staff_new', sender: 'system', restaurantId: r.id, bookingId: b.id, to: r.email, subject: m.subject, html: m.html, text: m.text });
